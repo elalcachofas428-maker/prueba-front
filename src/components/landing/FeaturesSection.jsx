@@ -1,136 +1,30 @@
-import React from 'react';
-import { Zap, FileText, Image as ImageIcon, Mail, Play, Shield } from 'lucide-react';
+const features = [
+  { icon: 'psychology', title: 'Generación con IA', desc: 'Nuestra IA entiende el contexto de tu propiedad para escribir copys que realmente venden.' },
+  { icon: 'layers', title: 'Multi-formato', desc: 'De un solo clic obtenés PDFs, posts, stories y videos listos para compartir.' },
+  { icon: 'auto_awesome', title: 'Publicación automática', desc: 'Programá tus redes sociales directamente desde LeadBook sin salir de la app.' },
+  { icon: 'bolt', title: 'Sin experiencia técnica', desc: 'No necesitás saber de diseño. El sistema hace el trabajo pesado por vos.' },
+  { icon: 'timer', title: 'Listo en segundos', desc: 'Lo que antes tomaba horas de diseño ahora se resuelve en lo que tardás en tomar un café.' },
+  { icon: 'dashboard', title: 'Para cualquier nicho', desc: 'Optimizado para inmobiliarias, pero flexible para cualquier tipo de producto físico.' },
+]
 
 export default function FeaturesSection() {
-  const features = [
-    { icon: Zap, titulo: 'Generación automática', desc: 'Completás el formulario y la IA genera todo el material en menos de 2 minutos. Sin esperas, sin iteraciones.' },
-    { icon: ImageIcon, titulo: 'Contenido para redes', desc: 'Posts, stories y carruseles optimizados, listos para publicar y atraer clientes.' },
-    { icon: Play, titulo: 'Videos sin editar', desc: 'Creá videos con voz en off y estructura profesional sin tocar un editor.' },
-    { icon: FileText, titulo: 'Presentación que vende', desc: 'Generá fichas tipo PDF con diseño premium, listas para enviar y cerrar clientes.' },
-    { icon: Mail, titulo: 'Emails que convierten', desc: 'Emails profesionales listos para enviar y generar consultas o ventas.' },
-    { icon: Shield, titulo: 'Tu marca integrada', desc: 'Todos los contenidos incluyen tu logo, colores y datos para mantener consistencia.' },
-  ];
-
   return (
-    <section id="funciones" style={{ 
-      padding: '100px 24px', 
-      background: 'var(--bg-surface)', 
-      position: 'relative',
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      overflow: 'hidden'
-    }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto', width: '100%' }}>
-        {/* Header */}
-        <div style={{ textAlign: 'center' }}>
-          <div style={{
-            display: 'inline-block',
-            background: 'rgba(0,196,212,0.08)',
-            border: '1px solid rgba(0,196,212,0.2)',
-            color: 'var(--accent)',
-            fontSize: 11,
-            fontWeight: 500,
-            textTransform: 'uppercase',
-            letterSpacing: '0.12em',
-            padding: '4px 12px',
-            borderRadius: 'var(--radius-full)'
-          }}>
-            POR QUÉ LEADBOOK
-          </div>
-          <h2 style={{
-            fontSize: 40,
-            fontWeight: 600,
-            color: 'var(--text-primary)',
-            marginTop: 24,
-            marginBottom: 16,
-            fontFamily: 'Syne, sans-serif'
-          }}>
-            Todo tu marketing listo para atraer clientes
-          </h2>
-          <p style={{
-            fontSize: 16,
-            color: 'var(--text-secondary)',
-            margin: 0
-          }}>
-            Creá contenido profesional, consistente y listo para publicar sin herramientas extra ni procesos manuales.
-          </p>
+    <section id="funciones" className="py-32 px-8 bg-surface-container-lowest">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-20">
+          <h2 className="text-4xl md:text-5xl font-headline mb-6 tracking-tight">Todo lo que necesitás en un solo lugar</h2>
+          <p className="text-slate-400 max-w-xl mx-auto">Diseñado para ser veloz, preciso y por sobre todo, profesional.</p>
         </div>
-
-        {/* Grid */}
-        <div className="features-grid" style={{
-          marginTop: 64,
-          display: 'grid',
-          gap: 24
-        }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {features.map((f, i) => (
-            <div key={i} className="feature-card" style={{
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border-subtle)',
-              borderRadius: 'var(--radius-lg)',
-              padding: 28,
-              transition: 'all 0.2s ease',
-              cursor: 'default'
-            }}>
-              <div style={{
-                width: 44,
-                height: 44,
-                borderRadius: '50%',
-                background: 'rgba(0,196,212,0.1)',
-                border: '1px solid rgba(0,196,212,0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--accent)'
-              }}>
-                <f.icon size={20} />
-              </div>
-              <h3 style={{
-                fontSize: 17,
-                fontWeight: 600,
-                color: 'var(--text-primary)',
-                marginTop: 16,
-                marginBottom: 8
-              }}>
-                {f.titulo}
-              </h3>
-              <p style={{
-                fontSize: 14,
-                color: 'var(--text-secondary)',
-                lineHeight: 1.6,
-                margin: 0
-              }}>
-                {f.desc}
-              </p>
+            <div key={i} className="bg-surface-container p-10 rounded-2xl glow-border hover:bg-surface-container-high transition-colors">
+              <span className="material-symbols-outlined text-primary-container text-4xl mb-6">{f.icon}</span>
+              <h3 className="text-xl font-headline mb-4">{f.title}</h3>
+              <p className="text-slate-400 leading-relaxed">{f.desc}</p>
             </div>
           ))}
         </div>
       </div>
-
-      <style>{`
-        .features-grid {
-          grid-template-columns: repeat(3, 1fr);
-        }
-        .feature-card:hover {
-          border-color: var(--accent) !important;
-          transform: translateY(-2px);
-        }
-        @media (max-width: 900px) {
-          .features-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-        }
-        @media (max-width: 600px) {
-          .features-grid {
-            grid-template-columns: 1fr;
-          }
-          .features-header h2 {
-            font-size: 32px !important;
-          }
-        }
-      `}</style>
     </section>
-  );
+  )
 }

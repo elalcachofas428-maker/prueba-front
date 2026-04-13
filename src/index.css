@@ -802,3 +802,32 @@ nav a:hover::after {
   }
 }
 
+.glass-nav {
+  background: rgba(7, 11, 20, 0.7);
+  backdrop-filter: blur(12px);
+}
+.text-gradient {
+  background: linear-gradient(135deg, #00D4FF 0%, #6001d1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.glow-border {
+  position: relative;
+}
+.glow-border::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(96,1,209,0.1));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask-composite: destination-out;
+  pointer-events: none;
+}
+.glow-border:hover::after {
+  background: linear-gradient(135deg, rgba(0,212,255,0.3), rgba(96,1,209,0.3));
+}
+

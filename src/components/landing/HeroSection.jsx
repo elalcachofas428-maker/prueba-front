@@ -1,193 +1,54 @@
-import { useEffect, useState } from 'react';
-import Logo from '../Logo';
+import { Link } from 'react-router-dom'
 
-const HeroSection = () => {
+export default function HeroSection() {
   return (
-    <section 
-      id="inicio"
-      style={{
-        width: '100%',
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: '#070B14',
-        padding: '0 24px',
-        textAlign: 'center'
-      }}
-    >
-      {/* Logo LB */}
-      <div style={{ marginBottom: '40px' }}>
-        <Logo size="xlarge" />
-      </div>
-
-      {/* Badge */}
-      <div style={{
-        display: 'inline-block',
-        padding: '8px 16px',
-        border: '1px solid rgba(0, 196, 212, 0.3)',
-        borderRadius: '24px',
-        color: '#00c4d4',
-        fontSize: '11px',
-        marginBottom: '24px',
-        letterSpacing: '0.05em',
-        fontWeight: 500
-      }}>
-        ✦ GENERACIÓN AUTOMÁTICA DE LEADS CON IA
-      </div>
-
-      {/* Headline */}
-      <h1 style={{
-        fontSize: 'clamp(32px, 8vw, 56px)',
-        fontWeight: 700,
-        color: '#ffffff',
-        marginBottom: '16px',
-        lineHeight: 1.2,
-        maxWidth: '900px'
-      }}>
-        Convertí cualquier producto o servicio en{' '}
-        <span style={{ color: '#00c4d4' }}>contenido que atrae clientes</span>
-      </h1>
-
-      {/* Subheadline */}
-      <p style={{
-        fontSize: '16px',
-        color: 'rgba(255,255,255,0.6)',
-        marginBottom: '32px',
-        lineHeight: 1.6,
-        maxWidth: '800px'
-      }}>
-        Automatizá la creación de posts, carruseles, PDFs, emails y videos en segundos. Todo listo para publicar y generar leads.
-      </p>
-
-      {/* CTA */}
-      <p style={{
-        fontSize: '16px',
-        color: '#ffffff',
-        fontWeight: 600,
-        marginBottom: '32px'
-      }}>
-        Menos trabajo. Más clientes.
-      </p>
-
-      {/* Buttons */}
-      <div style={{
-        display: 'flex',
-        gap: '16px',
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-        marginBottom: '48px'
-      }}>
-        <button style={{
-          padding: '12px 32px',
-          background: '#00c4d4',
-          color: '#070B14',
-          border: 'none',
-          borderRadius: '24px',
-          fontWeight: 600,
-          cursor: 'pointer',
-          fontSize: '14px',
-          transition: 'all 0.2s ease'
-        }}
-        onMouseEnter={(e) => {
-          e.target.style.transform = 'translateY(-2px)';
-          e.target.style.boxShadow = '0 10px 30px rgba(0, 196, 212, 0.2)';
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.transform = 'translateY(0)';
-          e.target.style.boxShadow = 'none';
-        }}
-        >
-          Crear cuenta gratis →
-        </button>
-        <button style={{
-          padding: '12px 32px',
-          background: 'transparent',
-          color: '#ffffff',
-          border: '1px solid rgba(255,255,255,0.2)',
-          borderRadius: '24px',
-          fontWeight: 600,
-          cursor: 'pointer',
-          fontSize: '14px',
-          transition: 'all 0.2s ease'
-        }}
-        onMouseEnter={(e) => {
-          e.target.style.borderColor = '#00c4d4';
-          e.target.style.color = '#00c4d4';
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.borderColor = 'rgba(255,255,255,0.2)';
-          e.target.style.color = '#ffffff';
-        }}
-        >
-          Ver cómo funciona
-        </button>
-      </div>
-
-      {/* Social Proof - AVATARS AQUÍ */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        gap: '12px'
-      }}>
-        {/* Avatars */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '0',
-          marginBottom: '8px'
-        }}>
-          {['A', 'M', 'C', 'S'].map((letter, idx) => (
-            <div
-              key={idx}
-              style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                background: ['#00D4FF', '#7C3AED', '#06B6D4', '#14B8A6'][idx],
-                color: '#070B14',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 700,
-                fontSize: '14px',
-                marginLeft: idx > 0 ? '-12px' : 0,
-                border: '2px solid #070B14',
-                zIndex: 10 - idx,
-                position: 'relative'
-              }}
-            >
-              {letter}
-            </div>
-          ))}
+    <section id="inicio" className="relative pt-48 pb-32 px-8 overflow-hidden">
+      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary-container/10 rounded-full blur-[120px] -z-10"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-secondary-container/10 rounded-full blur-[120px] -z-10"></div>
+      <div className="max-w-5xl mx-auto text-center">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface-container-highest border border-white/5 mb-8">
+          <span className="w-2 h-2 rounded-full bg-primary-container shadow-[0_0_10px_#00D4FF]"></span>
+          <span className="text-xs font-label uppercase tracking-widest text-primary">✦ Generación con IA</span>
         </div>
-
-        {/* Texto */}
-        <p style={{
-          fontSize: '14px',
-          color: 'rgba(255,255,255,0.7)',
-          margin: 0
-        }}>
-          Más de 500 negocios ya usan LeadBook
+        <h1 className="text-5xl md:text-7xl font-headline leading-[1.1] tracking-tight mb-8">
+          Convertí cualquier producto en <span className="text-gradient">contenido que atrae clientes</span>
+        </h1>
+        <p className="text-lg md:text-xl text-on-surface-variant max-w-2xl mx-auto mb-12">
+          Automatizá tu marketing inmobiliario con inteligencia artificial. Crea materiales de venta premium en segundos, sin complicaciones.
         </p>
-
-        {/* Rating */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '4px',
-          fontSize: '12px',
-          color: '#00c4d4'
-        }}>
-          ⭐⭐⭐⭐⭐ 4.9/5
+        <div className="flex flex-col sm:flex-row justify-center gap-4 mb-20">
+          <Link to="/register" className="px-8 py-4 bg-primary-container text-on-primary-fixed-variant rounded-full font-label uppercase tracking-widest text-sm font-bold shadow-lg shadow-cyan-500/20 hover:scale-95 transition-transform">
+            Empezar gratis
+          </Link>
+          <a href="#como-funciona" className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white rounded-full font-label uppercase tracking-widest text-sm border border-white/10 transition-all">
+            Ver cómo funciona
+          </a>
         </div>
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex -space-x-3">
+            {['A','M','C','S'].map((l, i) => (
+              <div key={i} className="w-10 h-10 rounded-full border-2 border-surface bg-surface-container-high flex items-center justify-center text-xs font-bold text-primary">{l}</div>
+            ))}
+          </div>
+          <p className="text-sm text-slate-500 font-label uppercase tracking-widest">Más de 500 negocios ya confían en nosotros</p>
+          <div className="flex gap-1 text-yellow-400 text-sm">★★★★★ <span className="text-slate-400 ml-1">4.9/5</span></div>
+        </div>
+      </div>
+      <div className="mt-24 relative max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 px-4">
+        {[
+          { label: 'PDF Brochure', rotate: '-rotate-3', labelColor: 'text-primary', aspect: 'aspect-[3/4]' },
+          { label: 'Instagram Post', rotate: 'translate-y-8', labelColor: 'text-secondary', aspect: 'aspect-square' },
+          { label: 'Reel / Video IA', rotate: '-translate-y-4', labelColor: 'text-primary', aspect: 'aspect-[9/16]' },
+          { label: 'Carrusel', rotate: 'rotate-6', labelColor: 'text-secondary', aspect: 'aspect-square' },
+        ].map((item, i) => (
+          <div key={i} className={`bg-surface-container glow-border rounded-xl p-4 transform ${item.rotate} hover:rotate-0 hover:translate-y-0 transition-transform duration-500 backdrop-blur-xl bg-opacity-40`}>
+            <div className={`w-full ${item.aspect} rounded-lg bg-surface-container-high mb-3 flex items-center justify-center`}>
+              <span className="material-symbols-outlined text-primary/30 text-5xl">image</span>
+            </div>
+            <p className={`text-xs font-label uppercase tracking-widest ${item.labelColor}`}>{item.label}</p>
+          </div>
+        ))}
       </div>
     </section>
-  );
-};
-
-export default HeroSection;
+  )
+}
