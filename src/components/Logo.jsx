@@ -7,7 +7,9 @@ const Logo = ({ size = 'default' }) => {
     small: '32px',
     default: '40px',
     large: '40px',
-    xlarge: '48px'
+    xlarge: '48px',
+    huge: '65px',
+    jumbo: '90px'
   };
 
   const finalHeight = sizes[size] || sizes.default;
@@ -18,7 +20,8 @@ const Logo = ({ size = 'default' }) => {
       alt="LeadBook" 
       style={{ 
         height: finalHeight, 
-        objectFit: 'contain' 
+        objectFit: 'contain',
+        borderRadius: '6px',
       }} 
     />
   );

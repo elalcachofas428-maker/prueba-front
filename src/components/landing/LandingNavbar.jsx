@@ -1,7 +1,9 @@
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Logo from '../Logo';
+import { NavbarLamp } from '../ui/NavbarLamp';
 
 const NAV_LINKS = [
   { label: 'Inicio',        id: 'inicio' },
@@ -16,8 +18,15 @@ const LandingNavbar = ({ seccionActiva, setSeccionActiva }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  // Sincronizar hash → sección al navegar hacia atrás/adelante
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   useEffect(() => {
     const onPop = () => {
       const hash = window.location.hash.replace('#', '');
@@ -28,6 +37,7 @@ const LandingNavbar = ({ seccionActiva, setSeccionActiva }) => {
   }, [setSeccionActiva]);
 
   const navegarA = (seccion) => {
+    setMenuOpen(false);
     if (seccion === 'precios') {
       navigate('/precios');
       return;
@@ -45,145 +55,176 @@ const LandingNavbar = ({ seccionActiva, setSeccionActiva }) => {
   };
 
   return (
-    <nav style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      height: '80px',
-      background: 'rgba(7, 11, 20, 0.95)',
-      backdropFilter: 'blur(10px)',
-      borderBottom: '1px solid rgba(0, 196, 212, 0.1)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '0 40px',
-      zIndex: 1000,
-      transition: 'all 0.2s ease',
-    }}>
-      {/* Logo */}
-      <button
-        onClick={() => navegarA('inicio')}
-        style={{
-          display: 'flex', alignItems: 'center', gap: '12px',
-          background: 'transparent', border: 'none', cursor: 'pointer', padding: 0,
-        }}
-      >
-        <Logo size="small" />
-        <span style={{ fontSize: '16px', fontWeight: 600, color: '#ffffff' }}>
-          LeadBook
-        </span>
-      </button>
+    <header>
+      <nav className="fixed z-[1000] w-full px-2 group">
 
-      {/* Links - Desktop */}
-      <div style={{ display: 'flex', gap: '40px', alignItems: 'center' }}>
-        {NAV_LINKS.map(({ label, id }) => {
-          const isActive = seccionActiva === id;
-          return (
-            <button
-              key={id}
-              onClick={() => navegarA(id)}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: isActive ? '#00c4d4' : 'rgba(255,255,255,0.7)',
-                fontSize: '14px',
-                cursor: 'pointer',
-                transition: 'color 0.2s ease',
-                padding: 0,
-                fontWeight: isActive ? 600 : 400,
-              }}
-              onMouseEnter={(e) => { e.target.style.color = '#00c4d4'; }}
-              onMouseLeave={(e) => { e.target.style.color = isActive ? '#00c4d4' : 'rgba(255,255,255,0.7)'; }}
-            >
-              {label}
-            </button>
-          );
-        })}
-      </div>
+        {/* Lamp effect — only when not scrolled */}
+        {!isScrolled && <NavbarLamp />}
 
-      {/* Auth Buttons */}
-      <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-        {user ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              {user.agencyLogo ? (
-                <img src={user.agencyLogo} style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover' }} />
-              ) : (
-                <div style={{ 
-                  width: '32px', height: '32px', borderRadius: '50%', 
-                  background: 'var(--accent)', color: '#070B14',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '12px', fontWeight: 700, fontFamily: 'Syne'
-                }}>
-                  {(user.name || user.email || 'U').charAt(0).toUpperCase()}
-                </div>
-              )}
-              <span style={{ fontSize: '14px', color: '#ffffff', fontWeight: 500 }}>
-                {user.name || user.email}
-              </span>
+        <div
+          className={[
+            'mx-auto mt-2 max-w-6xl px-6 transition-all duration-300 lg:px-12',
+            isScrolled
+              ? 'bg-[rgba(7,11,20,0.75)] max-w-4xl rounded-2xl border border-[rgba(0,196,212,0.15)] backdrop-blur-lg lg:px-5'
+              : '',
+          ].join(' ')}
+        >
+          <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
+
+            {/* Logo + hamburger */}
+            <div className="flex w-full justify-between lg:w-auto">
+              <button
+                onClick={() => navegarA('inicio')}
+                className="flex items-center gap-3 bg-transparent border-none cursor-pointer p-0"
+              >
+                <Logo size="small" />
+                <span className="text-white font-semibold text-base">LeadBook</span>
+              </button>
+
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden text-white"
+              >
+                <Menu
+                  className={`m-auto size-6 transition-all duration-200 ${
+                    menuOpen ? 'scale-0 opacity-0 rotate-180' : 'scale-100 opacity-100 rotate-0'
+                  }`}
+                />
+                <X
+                  className={`absolute inset-0 m-auto size-6 transition-all duration-200 ${
+                    menuOpen ? 'scale-100 opacity-100 rotate-0' : 'scale-0 opacity-0 -rotate-180'
+                  }`}
+                />
+              </button>
             </div>
-            <button
-              onClick={() => navigate('/dashboard')}
-              style={{
-                background: 'var(--accent)', color: '#070B14',
-                border: 'none', padding: '8px 20px',
-                borderRadius: '24px', fontSize: '14px',
-                fontWeight: 600, cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
-              onMouseEnter={(e) => { e.target.style.transform = 'translateY(-1px)'; e.target.style.boxShadow = '0 4px 12px rgba(0,196,212,0.2)'; }}
-              onMouseLeave={(e) => { e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = 'none'; }}
+
+            {/* Desktop nav links — centered */}
+            <div className="absolute inset-0 m-auto hidden size-fit lg:block">
+              <ul className="flex gap-8 text-sm">
+                {NAV_LINKS.map(({ label, id }) => (
+                  <li key={id}>
+                    <button
+                      onClick={() => navegarA(id)}
+                      className={[
+                        'bg-transparent border-none cursor-pointer text-sm transition-colors duration-150',
+                        seccionActiva === id
+                          ? 'text-[#00c4d4] font-semibold'
+                          : 'text-white/70 hover:text-white',
+                      ].join(' ')}
+                    >
+                      {label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Right section: auth buttons + mobile menu panel */}
+            <div
+              className={[
+                'w-full flex-wrap items-center justify-end rounded-3xl border border-white/10 bg-[rgba(7,11,20,0.95)] p-6 shadow-2xl shadow-zinc-900/20',
+                'lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none mb-4 lg:mb-0',
+                menuOpen ? 'flex' : 'hidden lg:flex',
+              ].join(' ')}
             >
-              Dashboard →
-            </button>
-            <button
-              onClick={() => {
-                logout();
-                navigate('/');
-              }}
-              style={{
-                background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-                color: 'rgba(255,255,255,0.7)', fontSize: '13px',
-                padding: '8px 16px', borderRadius: '20px',
-                cursor: 'pointer', transition: 'all 0.2s ease',
-              }}
-              onMouseEnter={(e) => { e.target.style.background = 'rgba(255,255,255,0.1)'; e.target.style.color = '#ffffff'; }}
-              onMouseLeave={(e) => { e.target.style.background = 'rgba(255,255,255,0.05)'; e.target.style.color = 'rgba(255,255,255,0.7)'; }}
-            >
-              Cerrar sesión
-            </button>
+              {/* Mobile nav links */}
+              <div className="w-full lg:hidden mb-6">
+                <ul className="space-y-5 text-base">
+                  {NAV_LINKS.map(({ label, id }) => (
+                    <li key={id}>
+                      <button
+                        onClick={() => navegarA(id)}
+                        className={[
+                          'bg-transparent border-none cursor-pointer transition-colors duration-150',
+                          seccionActiva === id
+                            ? 'text-[#00c4d4] font-semibold'
+                            : 'text-white/70 hover:text-white',
+                        ].join(' ')}
+                      >
+                        {label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Auth buttons */}
+              <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center md:w-fit">
+                {user ? (
+                  <>
+                    <div className="flex items-center gap-2">
+                      {user.agencyLogo ? (
+                        <img
+                          src={user.agencyLogo}
+                          className="w-8 h-8 rounded-full object-cover"
+                          alt=""
+                        />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-[#00c4d4] text-[#070B14] flex items-center justify-center text-xs font-bold">
+                          {(user.name || user.email || 'U').charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <span className="text-sm text-white font-medium">
+                        {user.name || user.email}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => navigate('/dashboard')}
+                      className="bg-[#00c4d4] text-[#070B14] border-none px-5 py-2 rounded-full text-sm font-semibold cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-[0_4px_16px_rgba(0,196,212,0.3)]"
+                    >
+                      Dashboard →
+                    </button>
+                    <button
+                      onClick={() => { logout(); navigate('/'); }}
+                      className="bg-white/5 border border-white/10 text-white/70 text-sm px-4 py-2 rounded-full cursor-pointer transition-all hover:bg-white/10 hover:text-white"
+                    >
+                      Cerrar sesión
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {/* Iniciar sesión: visible always; hidden on desktop when scrolled */}
+                    <button
+                      onClick={() => navigate('/login')}
+                      className={[
+                        'bg-transparent border border-white/20 text-white/80 text-sm px-4 py-2 rounded-full cursor-pointer transition-all hover:text-white hover:border-white/50',
+                        isScrolled ? 'lg:hidden' : '',
+                      ].join(' ')}
+                    >
+                      Iniciar sesión
+                    </button>
+
+                    {/* Empezar gratis: always visible on mobile; on desktop hidden when scrolled */}
+                    <button
+                      onClick={() => navigate('/register')}
+                      className={[
+                        'bg-[#00c4d4] text-[#070B14] border-none px-5 py-2 rounded-full text-sm font-semibold cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,196,212,0.25)]',
+                        isScrolled ? 'lg:hidden' : '',
+                      ].join(' ')}
+                    >
+                      Empezar gratis →
+                    </button>
+
+                    {/* Single CTA shown only when scrolled on desktop */}
+                    <button
+                      onClick={() => navigate('/register')}
+                      className={[
+                        'bg-[#00c4d4] text-[#070B14] border-none px-5 py-2 rounded-full text-sm font-semibold cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,196,212,0.25)]',
+                        isScrolled ? 'lg:inline-flex' : 'hidden',
+                      ].join(' ')}
+                    >
+                      Empezar gratis →
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+
           </div>
-        ) : (
-          <>
-            <button
-              onClick={() => navigate('/login')}
-              style={{
-                background: 'transparent', border: 'none',
-                color: 'rgba(255,255,255,0.7)', fontSize: '14px',
-                cursor: 'pointer', transition: 'color 0.2s ease', padding: 0, fontWeight: 400,
-              }}
-              onMouseEnter={(e) => { e.target.style.color = '#00c4d4'; }}
-              onMouseLeave={(e) => { e.target.style.color = 'rgba(255,255,255,0.7)'; }}
-            >
-              Iniciar sesión
-            </button>
-            <button
-              onClick={() => navigate('/register')}
-              style={{
-                background: '#00c4d4', color: '#070B14', border: 'none',
-                padding: '10px 24px', borderRadius: '24px',
-                fontSize: '14px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease',
-              }}
-              onMouseEnter={(e) => { e.target.style.transform = 'translateY(-2px)'; e.target.style.boxShadow = '0 10px 30px rgba(0,196,212,0.2)'; }}
-              onMouseLeave={(e) => { e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = 'none'; }}
-            >
-              Empezar gratis →
-            </button>
-          </>
-        )}
-      </div>
-    </nav>
+        </div>
+      </nav>
+    </header>
   );
 };
 

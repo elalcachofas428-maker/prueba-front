@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import SplitText from '../ui/SplitText'
 
 const plans = [
   {
@@ -23,17 +25,55 @@ const plans = [
   },
 ]
 
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12 } },
+}
+
+const cardVariants = {
+  hidden:  { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+}
+
 export default function PricingSection() {
   return (
-    <section id="precios" className="py-32 px-8">
+    <section id="precios" className="py-32 px-8 h-full flex flex-col justify-center">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-headline mb-6 tracking-tight">Planes que escalan con vos</h2>
-          <p className="text-slate-400">Sin contratos, cancelá cuando quieras.</p>
+          <SplitText
+            text="Planes que escalan con vos"
+            tag="h2"
+            className="text-4xl md:text-5xl font-headline mb-6 tracking-tight"
+            splitType="words"
+            delay={60}
+            from={{ opacity: 0, y: 30 }}
+            to={{ opacity: 1, y: 0 }}
+          />
+          <SplitText
+            text="Sin contratos, cancelá cuando quieras."
+            tag="p"
+            className="text-slate-400"
+            splitType="words"
+            delay={40}
+            startDelay={0.3}
+            from={{ opacity: 0, y: 16 }}
+            to={{ opacity: 1, y: 0 }}
+          />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
           {plans.map((p, i) => (
-            <div key={i} className={`p-8 rounded-2xl flex flex-col glow-border relative overflow-hidden ${p.highlight ? 'bg-surface-container-high ring-2 ring-primary-container/20 shadow-2xl shadow-cyan-500/10 scale-105 z-10' : 'bg-surface-container'}`}>
+            <motion.div
+              key={i}
+              variants={cardVariants}
+              className={`p-8 rounded-2xl flex flex-col glow-border relative overflow-hidden ${p.highlight ? 'bg-surface-container-high ring-2 ring-primary-container/20 shadow-2xl shadow-cyan-500/10 scale-105 z-10' : 'bg-surface-container'}`}
+            >
               {p.highlight && (
                 <div className="absolute top-0 right-0 bg-primary-container text-on-primary-fixed-variant px-3 py-1 text-[10px] font-label uppercase font-bold rounded-bl-xl">Más popular</div>
               )}
@@ -47,12 +87,15 @@ export default function PricingSection() {
                   </li>
                 ))}
               </ul>
-              <Link to={p.ctaLink} className={`w-full py-3 rounded-full text-xs font-label uppercase tracking-widest text-center transition-all ${p.highlight ? 'bg-primary-container text-on-primary-fixed-variant font-bold hover:opacity-90' : 'border border-white/10 hover:bg-white/5'}`}>
+              <Link
+                to={p.ctaLink}
+                className={`w-full py-3 rounded-full text-xs font-label uppercase tracking-widest text-center transition-all ${p.highlight ? 'bg-primary-container text-on-primary-fixed-variant font-bold hover:opacity-90' : 'border border-white/10 hover:bg-white/5'}`}
+              >
                 {p.cta}
               </Link>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   )

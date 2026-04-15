@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* ============================================
    LEADBOOK — DESIGN SYSTEM v1.0
    ============================================ */
@@ -34,10 +38,10 @@ body {
    ============================================ */
 :root {
   /* Fondos */
-  --bg-base: #070B14;
-  --bg-surface: #0E1525;
-  --bg-panel: #111827;
-  --bg-card: #131D30;
+  --bg-base: #000;
+  --bg-surface: #050505;
+  --bg-panel: #080808;
+  --bg-card: #0A0A0A;
   --bg-card-hover: #172030;
   --bg-input: #0E1525;
 
@@ -151,7 +155,7 @@ h1, h2, h3, h4, h5 { font-family: 'Syne', sans-serif; color: var(--text-primary)
 }
 .btn-primary:hover {
   background: var(--accent-hover);
-  box-shadow: var(--shadow-accent);
+  /* box-shadow: var(--shadow-accent); */
 }
 
 .btn-secondary {
@@ -629,10 +633,10 @@ h1, h2, h3, h4, h5 { font-family: 'Syne', sans-serif; color: var(--text-primary)
 .hover-lift {
   transition: transform var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
 }
-.hover-lift:hover {
+/* .hover-lift:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
-}
+} */
 
 /* ============================================
    RESPONSIVE
@@ -738,8 +742,8 @@ button {
 }
 
 button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0, 196, 212, 0.15);
+  /* transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 196, 212, 0.15); */
 }
 
 button:active {
@@ -747,6 +751,8 @@ button:active {
 }
 
 /* Efectos en cards */
+/* Deshabilitado para no interferir con CardSwap */
+/* 
 [class*="card"], .step-card {
   transition: all 0.3s ease;
 }
@@ -756,6 +762,7 @@ button:active {
   transform: translateY(-4px);
   box-shadow: 0 10px 30px rgba(0, 196, 212, 0.1);
 }
+*/
 
 /* Efectos en links */
 a, nav a {
@@ -830,4 +837,6 @@ nav a:hover::after {
 .glow-border:hover::after {
   background: linear-gradient(135deg, rgba(0,212,255,0.3), rgba(96,1,209,0.3));
 }
+
+
 
