@@ -254,6 +254,7 @@ export default function DeviceOnboardingPage() {
                   description="Desktop o Laptop"
                   selected={selected === 'pc'}
                   onSelect={() => handleSelect('pc')}
+                  isMobile={isMobile}
                 />
                 <DeviceCard
                   icon={<Smartphone size={52} strokeWidth={1.4} />}
@@ -261,6 +262,7 @@ export default function DeviceOnboardingPage() {
                   description="Smartphone o Tablet"
                   selected={selected === 'mobile'}
                   onSelect={() => handleSelect('mobile')}
+                  isMobile={isMobile}
                 />
               </motion.div>
             </motion.div>
@@ -456,7 +458,7 @@ export default function DeviceOnboardingPage() {
 }
 
 /* ─── Large Device Selection Card ─── */
-function DeviceCard({ icon, title, description, selected, onSelect }) {
+function DeviceCard({ icon, title, description, selected, onSelect, isMobile }) {
   return (
     <motion.div
       onClick={onSelect}
