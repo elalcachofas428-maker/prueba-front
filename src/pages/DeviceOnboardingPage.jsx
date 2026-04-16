@@ -20,6 +20,19 @@ export default function DeviceOnboardingPage() {
   const [showContent, setShowContent] = useState(false);
   const [step, setStep] = useState('select'); // 'select' | 'rotate' | 'intro'
   const [isLandscape, setIsLandscape] = useState(false);
+  
+  // Responsive detection
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isLandscapeShort, setIsLandscapeShort] = useState(window.innerHeight < 500);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsLandscapeShort(window.innerHeight < 500);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowContent(true), 400);
@@ -133,9 +146,11 @@ export default function DeviceOnboardingPage() {
         {/* --- Logo clickable to Landing --- */}
         <div style={{
           position: 'absolute',
-          top: '32px',
-          left: '42px',
-          zIndex: 100
+          top: isMobile ? '20px' : '32px',
+          left: isMobile ? '50%' : '42px',
+          transform: isMobile ? 'translateX(-50%)' : 'none',
+          zIndex: 100,
+          transition: 'all 0.4s ease',
         }}>
           <button
             onClick={() => navigate('/landing')}
@@ -145,7 +160,8 @@ export default function DeviceOnboardingPage() {
               cursor: 'pointer',
               padding: 0,
               display: 'flex',
-              alignItems: 'center'
+              alignItems: 'center',
+              transform: isMobile ? 'scale(0.85)' : 'none',
             }}
           >
             <Logo size="large" />
@@ -164,6 +180,8 @@ export default function DeviceOnboardingPage() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                width: '100%',
+                marginTop: isMobile ? '40px' : '0',
               }}
             >
 
@@ -181,7 +199,7 @@ export default function DeviceOnboardingPage() {
                   textAlign: 'center',
                   lineHeight: 1.1,
                   letterSpacing: '-0.03em',
-                  marginBottom: '12px',
+                  marginBottom: isMobile ? '8px' : '12px',
                   maxWidth: '600px',
                 }}
               >
@@ -208,7 +226,8 @@ export default function DeviceOnboardingPage() {
                   textAlign: 'center',
                   maxWidth: '420px',
                   lineHeight: 1.6,
-                  marginBottom: '48px',
+                  marginBottom: isMobile ? '32px' : '48px',
+                  fontSize: isMobile ? '14px' : '16px',
                 }}
               >
                 Optimizamos tu experiencia según tu dispositivo.
@@ -221,9 +240,12 @@ export default function DeviceOnboardingPage() {
                 transition={{ duration: 0.8, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
                 style={{
                   display: 'flex',
-                  gap: '32px',
-                  flexWrap: 'wrap',
+                  gap: isMobile ? '16px' : '32px',
+                  flexDirection: isMobile ? 'column' : 'row',
+                  alignItems: 'center',
                   justifyContent: 'center',
+                  width: '100%',
+                  maxWidth: '800px',
                 }}
               >
                 <DeviceCard
@@ -256,9 +278,10 @@ export default function DeviceOnboardingPage() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '32px',
+                gap: isMobile ? '20px' : '32px',
                 textAlign: 'center',
                 padding: '24px',
+                marginTop: isMobile ? '30px' : '0',
               }}
             >
               {/* Animated phone rotation icon */}
@@ -300,10 +323,11 @@ export default function DeviceOnboardingPage() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    transform: isMobile ? 'scale(0.85)' : 'none',
                   }}
                 >
                   <Smartphone
-                    size={56}
+                    size={isMobile ? 48 : 56}
                     strokeWidth={1.3}
                     color="#00D4FF"
                   />
@@ -441,16 +465,17 @@ function DeviceCard({ icon, title, description, selected, onSelect }) {
       animate={selected ? { scale: 1.02 } : { scale: 1 }}
       transition={{ type: 'spring', stiffness: 260, damping: 20 }}
       style={{
-        width: '280px',
-        minHeight: '300px',
-        padding: '48px 32px 40px',
+        width: isMobile ? '100%' : '280px',
+        maxWidth: '340px',
+        minHeight: isMobile ? 'auto' : '300px',
+        padding: isMobile ? '24px 20px' : '48px 32px 40px',
         borderRadius: '28px',
         cursor: 'pointer',
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: isMobile ? 'row' : 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        gap: '20px',
+        justifyContent: isMobile ? 'flex-start' : 'center',
+        gap: isMobile ? '16px' : '20px',
         position: 'relative',
         overflow: 'hidden',
         background: selected
@@ -506,9 +531,9 @@ function DeviceCard({ icon, title, description, selected, onSelect }) {
           borderColor: selected ? 'rgba(0,212,255,0.25)' : 'rgba(255,255,255,0.06)',
         }}
         style={{
-          width: '96px',
-          height: '96px',
-          borderRadius: '24px',
+          width: isMobile ? '64px' : '96px',
+          height: isMobile ? '64px' : '96px',
+          borderRadius: isMobile ? '16px' : '24px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -522,31 +547,42 @@ function DeviceCard({ icon, title, description, selected, onSelect }) {
           zIndex: 1,
         }}
       >
-        {icon}
+        {icon && (
+          <div style={{ transform: isMobile ? 'scale(0.7)' : 'none' }}>
+            {icon}
+          </div>
+        )}
       </motion.div>
 
-      <span style={{
-        fontFamily: '"Syne", sans-serif',
-        fontSize: '22px',
-        fontWeight: 700,
-        color: selected ? '#fff' : '#CBD5E1',
-        transition: 'color 0.3s ease',
-        position: 'relative',
-        zIndex: 1,
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: isMobile ? 'flex-start' : 'center',
+        flex: 1,
       }}>
-        {title}
-      </span>
+        <span style={{
+          fontFamily: '"Syne", sans-serif',
+          fontSize: isMobile ? '18px' : '22px',
+          fontWeight: 700,
+          color: selected ? '#fff' : '#CBD5E1',
+          transition: 'color 0.3s ease',
+          position: 'relative',
+          zIndex: 1,
+        }}>
+          {title}
+        </span>
 
-      <span style={{
-        fontFamily: '"DM Sans", sans-serif',
-        fontSize: '14px',
-        color: selected ? '#94A3B8' : '#475569',
-        transition: 'color 0.3s ease',
-        position: 'relative',
-        zIndex: 1,
-      }}>
-        {description}
-      </span>
+        <span style={{
+          fontFamily: '"DM Sans", sans-serif',
+          fontSize: '14px',
+          color: selected ? '#94A3B8' : '#475569',
+          transition: 'color 0.3s ease',
+          position: 'relative',
+          zIndex: 1,
+        }}>
+          {description}
+        </span>
+      </div>
 
       <motion.div
         initial={false}
