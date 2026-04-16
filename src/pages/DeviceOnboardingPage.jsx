@@ -51,7 +51,7 @@ export default function DeviceOnboardingPage() {
       if (landscape) {
         setTimeout(() => {
           setStep('intro');
-        }, 5000); // Wait 5 seconds before showing intro video
+        }, 1200); // Much faster transition (1.2s)
       }
     };
 
@@ -67,6 +67,16 @@ export default function DeviceOnboardingPage() {
       window.removeEventListener('orientationchange', checkOrientation);
     };
   }, [step, navigate]);
+
+  // Safety timer: Auto-proceed if stuck in rotate screen for > 10s
+  useEffect(() => {
+    if (step === 'rotate') {
+      const safetyTimer = setTimeout(() => {
+        setStep('intro');
+      }, 10000);
+      return () => clearTimeout(safetyTimer);
+    }
+  }, [step]);
 
   const handleSelect = useCallback((device) => {
     setSelected(device);
