@@ -15,18 +15,14 @@ const NAV_LINKS = [
 export default function NavBar({ user, onLogout, activeSection, onNavigate }) {
   const [menuOpen, setMenuOpen] = React.useState(false)
   
-  // Custom hook for landscape responsiveness + localStorage flag
-  const [isMobileMode, setIsMobileMode] = React.useState(false);
+  // Custom hook for landscape responsiveness
+  const [isLandscapeShort, setIsLandscapeShort] = React.useState(false);
   React.useEffect(() => {
     const mq = window.matchMedia('(max-height: 500px) and (orientation: landscape)');
-    const updateMode = () => {
-      const isShort = mq.matches;
-      const selectedDevice = localStorage.getItem('leadbook_device');
-      setIsMobileMode(isShort || selectedDevice === 'mobile');
-    };
-    updateMode();
-    mq.addEventListener('change', updateMode);
-    return () => mq.removeEventListener('change', updateMode);
+    const updateHeader = () => setIsLandscapeShort(mq.matches);
+    updateHeader();
+    mq.addEventListener('change', updateHeader);
+    return () => mq.removeEventListener('change', updateHeader);
   }, []);
 
   const handleNav = (id) => {
@@ -37,17 +33,17 @@ export default function NavBar({ user, onLogout, activeSection, onNavigate }) {
   return (
     <header style={{ 
       position: 'absolute', 
-      top: isMobileMode ? '10px' : '20px', 
+      top: isLandscapeShort ? '10px' : '20px', 
       left: 0, right: 0, 
       zIndex: 50, 
-      padding: isMobileMode ? '0 10px' : '0 20px' 
+      padding: isLandscapeShort ? '0 10px' : '0 20px' 
     }}>
       {/* CSS — ultra-smooth GPU-composited hover animations */}
       <style>{`
         .gradient-pill {
           position: relative;
-          width: ${isMobileMode ? '40px' : '50px'};
-          height: ${isMobileMode ? '40px' : '50px'};
+          width: ${isLandscapeShort ? '40px' : '50px'};
+          height: ${isLandscapeShort ? '40px' : '50px'};
           border-radius: 9999px;
           display: flex;
           align-items: center;

@@ -160,18 +160,14 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
   const [animationKey, setAnimationKey] = useState(0);
   const [isFirstRun, setIsFirstRun] = useState(true);
   
-  // Custom hook for landscape responsiveness + localStorage flag
-  const [isMobileMode, setIsMobileMode] = useState(false);
+  // Custom hook for landscape responsiveness
+  const [isLandscapeShort, setIsLandscapeShort] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia('(max-height: 500px) and (orientation: landscape)');
-    const updateMode = () => {
-      const isShort = mq.matches;
-      const selectedDevice = localStorage.getItem('leadbook_device');
-      setIsMobileMode(isShort || selectedDevice === 'mobile');
-    };
-    updateMode();
-    mq.addEventListener('change', updateMode);
-    return () => mq.removeEventListener('change', updateMode);
+    const updateHeader = () => setIsLandscapeShort(mq.matches);
+    updateHeader();
+    mq.addEventListener('change', updateHeader);
+    return () => mq.removeEventListener('change', updateHeader);
   }, []);
 
   useEffect(() => {
@@ -352,32 +348,28 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
         `,
       }} />
 
-      {/* ── Left edge soft fade — optimized for mobile/desktop ── */}
+      {/* ── Left edge soft fade — prevents hard clip on the left ── */}
       <div style={{
         position: 'absolute',
         top: 0,
         left: 0,
-        width: isMobileMode ? '14%' : '8%',
+        width: isLandscapeShort ? '8%' : '8%',
         height: '100%',
-        background: isMobileMode 
-          ? 'linear-gradient(to left, transparent 0%, #000 100%)' 
-          : 'linear-gradient(to right, #000 0%, transparent 100%)',
-        zIndex: isMobileMode ? 3 : 2,
+        background: 'linear-gradient(to right, #000 0%, transparent 100%)',
+        zIndex: 2,
         pointerEvents: 'none',
       }} />
 
 
-      {/* ── ROBOT — flipped to left in mobile/landscape ── */}
+      {/* ── ROBOT — Restored to right side ── */}
       <div style={{
         position: 'absolute',
-        top: isMobileMode ? '0%' : '-2%',
-        left: isMobileMode ? '-10%' : 'auto',
-        right: isMobileMode ? 'auto' : '-4%',
-        width: isMobileMode ? '55%' : '60%',
-        height: isMobileMode ? '105%' : '120%',
+        top: isLandscapeShort ? '5%' : '-2%',
+        right: isLandscapeShort ? '-15%' : '-4%',
+        width: isLandscapeShort ? '50%' : '60%',
+        height: isLandscapeShort ? '100%' : '120%',
         zIndex: 1,
         mixBlendMode: 'screen',
-        transform: isMobileMode ? 'scaleX(-1)' : 'none', // Flip the robot too? Optional, looks good.
       }}>
         <InteractiveRobotSpline
           scene="https://prod.spline.design/PyzDhpQ9E5f1E3MT/scene.splinecode"
@@ -385,19 +377,17 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
         />
       </div>
 
-      {/* ── Right overlay — optimized for mobile/desktop ── */}
-      {!isMobileMode && (
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          width: '14%',
-          height: '100%',
-          background: 'linear-gradient(to right, transparent 0%, #000 100%)',
-          zIndex: 3,
-          pointerEvents: 'none',
-        }} />
-      )}
+      {/* ── OVERLAY DERECHO — pinta #000 sobre el borde crudo del canvas ── */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: '14%',
+        height: '100%',
+        background: 'linear-gradient(to right, transparent 0%, #000 100%)',
+        zIndex: 3,
+        pointerEvents: 'none',
+      }} />
 
       {/* ── OVERLAY INFERIOR — gradiente suave que no corta el glow ── */}
       <div style={{
@@ -421,26 +411,26 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
         pointerEvents: 'none',
       }} />
 
-      {/* ── TEXTO — flipped to right in mobile/landscape ── */}
+      {/* ── TEXTO CON GLOW EN CONTORNO DE LETRAS — Restored to left side ── */}
       <TextGlowZone key={animationKey} style={{
         position: 'absolute',
-        top: isMobileMode ? '5%' : '10%', 
-        left: isMobileMode ? '45%' : '4%',
-        height: isMobileMode ? '100%' : '80%',
-        width: isMobileMode ? '52%' : '54%',
+        top: isLandscapeShort ? '5%' : '10%', 
+        left: isLandscapeShort ? '2%' : '4%',
+        height: isLandscapeShort ? '100%' : '80%',
+        width: isLandscapeShort ? '65%' : '54%',
         zIndex: 4,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        padding: isMobileMode ? '1.5rem 3rem 1.5rem 1rem' : '3rem',
-        gap: isMobileMode ? '0.6rem' : '1.5rem',
+        padding: isLandscapeShort ? '1.5rem 2rem' : '3rem',
+        gap: isLandscapeShort ? '0.6rem' : '1.5rem',
       }}>
 
         {/* Nombre de marca — Shiny animated gradient */}
         <HeroAnimatedBlock delay={0.1 * speedMult}>
           <div className="animated-shiny-text">
             <HoverLetters tag="div" style={{
-              fontSize: isMobileMode ? '1.8rem' : 'clamp(2.8rem, 5vw, 4.5rem)',
+              fontSize: isLandscapeShort ? '2rem' : 'clamp(2.8rem, 5vw, 4.5rem)',
               fontFamily: 'Syne, sans-serif',
               fontWeight: 800,
               letterSpacing: '-0.04em',
@@ -452,7 +442,7 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
         {/* Título principal — Shiny animated gradient */}
         <HeroAnimatedBlock delay={0.4 * speedMult}>
           <h1 className="animated-shiny-text" style={{
-            fontSize: isMobileMode ? '1.6rem' : 'clamp(2.4rem, 4.5vw, 4rem)',
+            fontSize: isLandscapeShort ? '1.8rem' : 'clamp(2.4rem, 4.5vw, 4rem)',
             fontFamily: 'Syne, sans-serif',
             fontWeight: 800,
             lineHeight: 1.1,
@@ -480,11 +470,11 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
             threshold={0.1}
             rootMargin="-50px"
             style={{
-              fontSize: isMobileMode ? '0.75rem' : '1rem',
+              fontSize: isLandscapeShort ? '0.85rem' : '1rem',
               color: 'rgba(255,255,255,0.55)',
-              lineHeight: isMobileMode ? 1.3 : 1.7,
+              lineHeight: isLandscapeShort ? 1.4 : 1.7,
               margin: 0,
-              maxWidth: isMobileMode ? '100%' : '420px',
+              maxWidth: isLandscapeShort ? '100%' : '420px',
               fontFamily: 'DM Sans, sans-serif',
             }}
           />
@@ -494,10 +484,10 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
         <HeroAnimatedBlock delay={1.5 * speedMult}>
           <div style={{ 
             display: 'flex', 
-            gap: isMobileMode ? '0.5rem' : '1rem', 
+            gap: isLandscapeShort ? '0.6rem' : '1rem', 
             flexWrap: 'wrap', 
             alignItems: 'center',
-            transform: isMobileMode ? 'scale(0.8)' : 'none',
+            transform: isLandscapeShort ? 'scale(0.85)' : 'none',
             transformOrigin: 'left center'
           }}>
             <MetalButton href="/register" variant="gradient">
@@ -515,21 +505,21 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
             <div style={{ 
               display: 'flex', 
               alignItems: 'center', 
-              gap: isMobileMode ? '6px' : '12px',
-              transform: isMobileMode ? 'scale(0.8)' : 'none',
+              gap: isLandscapeShort ? '8px' : '12px',
+              transform: isLandscapeShort ? 'scale(0.9)' : 'none',
               transformOrigin: 'left center'
             }}>
               <div style={{ display: 'flex' }}>
                 {['A','M','C','S'].map((l, i) => (
                   <div key={i} style={{
-                    width: isMobileMode ? '22px' : '30px', 
-                    height: isMobileMode ? '22px' : '30px',
+                    width: isLandscapeShort ? '24px' : '30px', 
+                    height: isLandscapeShort ? '24px' : '30px',
                     borderRadius: '50%',
                     background: 'linear-gradient(135deg, #1f2937, #111827)',
                     border: '2px solid #000',
                     display: 'flex', alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: isMobileMode ? '0.5rem' : '0.65rem', 
+                    fontSize: isLandscapeShort ? '0.55rem' : '0.65rem', 
                     fontWeight: 700,
                     color: '#00D4FF',
                     marginLeft: i > 0 ? '-8px' : '0',
@@ -538,7 +528,7 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
               </div>
               <div>
                 <HoverLetters tag="p" style={{
-                  fontSize: isMobileMode ? '0.55rem' : '0.7rem', 
+                  fontSize: isLandscapeShort ? '0.6rem' : '0.7rem', 
                   color: 'rgba(255,255,255,0.4)',
                   margin: 0, textTransform: 'uppercase',
                   letterSpacing: '0.08em',
