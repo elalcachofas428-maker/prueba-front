@@ -41,6 +41,7 @@ export default function SplitText({
   onLetterAnimationComplete,
   hoverJump = false,
   colorCycle = false,
+  letterClass = '',
 }) {
   const containerRef = useRef(null)
   const hasAnimated = useRef(false)
@@ -65,6 +66,11 @@ export default function SplitText({
       }
       if (hoverJump) span.classList.add('split-hover-jump')
       if (colorCycle) span.classList.add('hero-color-cycle')
+      if (letterClass) {
+        letterClass.split(' ').forEach(cls => {
+          if (cls) span.classList.add(cls);
+        });
+      }
       
       // Force inherit to ensure background-clip transparency works
       span.style.color = 'inherit'
