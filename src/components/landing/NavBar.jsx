@@ -17,12 +17,25 @@ export default function NavBar({ user, onLogout, activeSection, onNavigate }) {
   
   // Custom hook for landscape responsiveness
   const [isLandscapeShort, setIsLandscapeShort] = React.useState(false);
+  const [isPortrait, setIsPortrait] = React.useState(false);
+
   React.useEffect(() => {
-    const mq = window.matchMedia('(max-height: 500px) and (orientation: landscape)');
-    const updateHeader = () => setIsLandscapeShort(mq.matches);
+    const mqLandscape = window.matchMedia('(max-height: 500px) and (orientation: landscape)');
+    const mqPortrait = window.matchMedia('(orientation: portrait)');
+    
+    const updateHeader = () => {
+      setIsLandscapeShort(mqLandscape.matches);
+      setIsPortrait(mqPortrait.matches);
+    };
+    
     updateHeader();
-    mq.addEventListener('change', updateHeader);
-    return () => mq.removeEventListener('change', updateHeader);
+    mqLandscape.addEventListener('change', updateHeader);
+    mqPortrait.addEventListener('change', updateHeader);
+    
+    return () => {
+      mqLandscape.removeEventListener('change', updateHeader);
+      mqPortrait.removeEventListener('change', updateHeader);
+    };
   }, []);
 
   const handleNav = (id) => {
@@ -168,8 +181,8 @@ export default function NavBar({ user, onLogout, activeSection, onNavigate }) {
           style={{
             display: 'flex', alignItems: 'center',
             background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-            marginLeft: isLandscapeShort ? '30px' : '60px',
-            transform: isLandscapeShort ? 'scale(0.8)' : 'none',
+            marginLeft: isPortrait ? '10px' : (isLandscapeShort ? '30px' : '60px'),
+            transform: isPortrait ? 'scale(0.7)' : (isLandscapeShort ? 'scale(0.8)' : 'none'),
           }}
         >
           <Logo size="huge" />
@@ -181,7 +194,7 @@ export default function NavBar({ user, onLogout, activeSection, onNavigate }) {
           aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
           className="nav-hamburger"
           style={{
-            display: 'none',
+            display: isPortrait ? 'block' : 'none',
             background: 'none', border: 'none', cursor: 'pointer',
             color: 'white', padding: '8px',
           }}
@@ -190,7 +203,7 @@ export default function NavBar({ user, onLogout, activeSection, onNavigate }) {
         </button>
 
         {/* --- 2. Gradient Menu (Desktop) --- */}
-        <nav className="nav-desktop-links" style={{ display: 'flex' }}>
+        <nav className="nav-desktop-links" style={{ display: isPortrait ? 'none' : 'flex' }}>
           <ul style={{
             display: 'flex',
             gap: '8px',
@@ -224,13 +237,14 @@ export default function NavBar({ user, onLogout, activeSection, onNavigate }) {
         {/* --- 3. Auth Buttons --- */}
         <div className="nav-desktop-auth" style={{
           display: 'flex', alignItems: 'center', gap: '12px',
-          padding: isLandscapeShort ? '4px 6px' : '6px 8px',
+          padding: isPortrait ? '4px' : (isLandscapeShort ? '4px 6px' : '6px 8px'),
           borderRadius: '9999px',
-          background: 'rgba(255,255,255,0.04)',
-          backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255,255,255,0.06)',
-          transform: isLandscapeShort ? 'scale(0.9)' : 'none',
-          transformOrigin: 'right center'
+          background: isPortrait ? 'transparent' : 'rgba(255,255,255,0.04)',
+          backdropFilter: isPortrait ? 'none' : 'blur(12px)',
+          border: isPortrait ? 'none' : '1px solid rgba(255,255,255,0.06)',
+          transform: isPortrait ? 'scale(0.85)' : (isLandscapeShort ? 'scale(0.9)' : 'none'),
+          transformOrigin: 'right center',
+          display: isPortrait ? 'none' : 'flex'
         }}>
           {user ? (
             <>

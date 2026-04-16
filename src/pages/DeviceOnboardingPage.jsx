@@ -83,14 +83,9 @@ export default function DeviceOnboardingPage() {
 
     setTimeout(() => {
       localStorage.setItem('leadbook_device', device);
-
-      if (device === 'pc') {
-        // PC: play intro video
-        setStep('intro');
-      } else {
-        // Mobile: show rotate screen first
-        setStep('rotate');
-      }
+      // Both PC and Mobile now proceed directly to the introduction, 
+      // as we now support a vertical mobile layout.
+      setStep('intro');
     }, 400);
   }, []);
 

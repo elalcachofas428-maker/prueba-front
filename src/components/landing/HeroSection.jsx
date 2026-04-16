@@ -162,12 +162,25 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
   
   // Custom hook for landscape responsiveness
   const [isLandscapeShort, setIsLandscapeShort] = useState(false);
+  const [isPortrait, setIsPortrait] = useState(false);
+  
   useEffect(() => {
-    const mq = window.matchMedia('(max-height: 500px) and (orientation: landscape)');
-    const updateHeader = () => setIsLandscapeShort(mq.matches);
+    const mqLandscape = window.matchMedia('(max-height: 500px) and (orientation: landscape)');
+    const mqPortrait = window.matchMedia('(orientation: portrait)');
+    
+    const updateHeader = () => {
+      setIsLandscapeShort(mqLandscape.matches);
+      setIsPortrait(mqPortrait.matches);
+    };
+    
     updateHeader();
-    mq.addEventListener('change', updateHeader);
-    return () => mq.removeEventListener('change', updateHeader);
+    mqLandscape.addEventListener('change', updateHeader);
+    mqPortrait.addEventListener('change', updateHeader);
+    
+    return () => {
+      mqLandscape.removeEventListener('change', updateHeader);
+      mqPortrait.removeEventListener('change', updateHeader);
+    };
   }, []);
 
   useEffect(() => {
@@ -197,13 +210,13 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
           — positioned left-center so robot stays clean
           ══════════════════════════════════════════ */}
 
-      {/* ── Orb 1: Violet grande, izquierda-centro ── */}
+      {/* ── Orb 1: Violet grande, arriba/centro en portrait, izquierda en landscape ── */}
       <div style={{
         position: 'absolute',
-        top: '5%',
-        left: '2%',
-        width: '55%',
-        height: '80%',
+        top: isPortrait ? '10%' : '5%',
+        left: isPortrait ? '0%' : '2%',
+        width: isPortrait ? '100%' : '55%',
+        height: isPortrait ? '40%' : '80%',
         borderRadius: '50%',
         background: 'radial-gradient(circle, rgba(124,58,237,0.38) 0%, rgba(96,1,209,0.18) 40%, transparent 70%)',
         filter: 'blur(60px)',
@@ -212,13 +225,13 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
         animation: 'auroraFloat1 12s ease-in-out infinite',
       }} />
 
-      {/* ── Orb 2: Cyan, centro-izquierda ── */}
+      {/* ── Orb 2: Cyan, centro ── */}
       <div style={{
         position: 'absolute',
-        top: '20%',
-        left: '5%',
-        width: '45%',
-        height: '55%',
+        top: isPortrait ? '30%' : '20%',
+        left: isPortrait ? '10%' : '5%',
+        width: isPortrait ? '80%' : '45%',
+        height: isPortrait ? '40%' : '55%',
         borderRadius: '50%',
         background: 'radial-gradient(circle, rgba(0,212,255,0.28) 0%, rgba(0,212,255,0.10) 45%, transparent 70%)',
         filter: 'blur(55px)',
@@ -361,13 +374,14 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
       }} />
 
 
-      {/* ── ROBOT — Restored to right side ── */}
+      {/* ── ROBOT — Restored to right side / Bottom in portrait ── */}
       <div style={{
         position: 'absolute',
-        top: isLandscapeShort ? '5%' : '-2%',
-        right: isLandscapeShort ? '-15%' : '-4%',
-        width: isLandscapeShort ? '50%' : '60%',
-        height: isLandscapeShort ? '100%' : '120%',
+        top: isPortrait ? '50%' : (isLandscapeShort ? '5%' : '-2%'),
+        right: isPortrait ? 'auto' : (isLandscapeShort ? '-15%' : '-4%'),
+        left: isPortrait ? '0%' : 'auto',
+        width: isPortrait ? '100%' : (isLandscapeShort ? '50%' : '60%'),
+        height: isPortrait ? '60%' : (isLandscapeShort ? '100%' : '120%'),
         zIndex: 1,
         mixBlendMode: 'screen',
       }}>
@@ -389,13 +403,13 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
         pointerEvents: 'none',
       }} />
 
-      {/* ── OVERLAY INFERIOR — gradiente suave que no corta el glow ── */}
+      {/* ── OVERLAY INFERIOR — gradiente suave ── */}
       <div style={{
         position: 'absolute',
         bottom: 0,
         left: 0,
         width: '100%',
-        height: '55%',
+        height: isPortrait ? '30%' : '55%',
         background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.85) 70%, #000 100%)',
         zIndex: 3,
         pointerEvents: 'none',
@@ -411,18 +425,19 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
         pointerEvents: 'none',
       }} />
 
-      {/* ── TEXTO CON GLOW EN CONTORNO DE LETRAS — Restored to left side ── */}
+      {/* ── TEXTO — Restored to left / Centered on portrait ── */}
       <TextGlowZone key={animationKey} style={{
         position: 'absolute',
-        top: isLandscapeShort ? '5%' : '10%', 
-        left: isLandscapeShort ? '2%' : '4%',
-        height: isLandscapeShort ? '100%' : '80%',
-        width: isLandscapeShort ? '65%' : '54%',
+        top: isPortrait ? '10%' : (isLandscapeShort ? '5%' : '10%'), 
+        left: isPortrait ? '5%' : (isLandscapeShort ? '2%' : '4%'),
+        height: isPortrait ? 'auto' : (isLandscapeShort ? '100%' : '80%'),
+        width: isPortrait ? '90%' : (isLandscapeShort ? '65%' : '54%'),
         zIndex: 4,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        padding: isLandscapeShort ? '1.5rem 2rem' : '3rem',
+        alignItems: isPortrait ? 'center' : 'flex-start',
+        padding: isPortrait ? '1rem' : (isLandscapeShort ? '1.5rem 2rem' : '3rem'),
         gap: isLandscapeShort ? '0.6rem' : '1.5rem',
       }}>
 
@@ -436,8 +451,9 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
               delay={40 * speedMult}
               duration={0.7 * speedMult}
               startDelay={0.2 * speedMult}
+              textAlign={isPortrait ? 'center' : 'left'}
               style={{
-                fontSize: isLandscapeShort ? '2rem' : 'clamp(2.8rem, 5vw, 4.5rem)',
+                fontSize: isPortrait ? '2.4rem' : (isLandscapeShort ? '2rem' : 'clamp(2.8rem, 5vw, 4.5rem)'),
                 fontFamily: 'Syne, sans-serif',
                 fontWeight: 800,
                 letterSpacing: '-0.04em',
@@ -451,14 +467,15 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
         <HeroAnimatedBlock delay={0.3 * speedMult}>
           <div style={{ position: 'relative' }}>
             <SplitText
-              text="Convertí cualquier producto en contenido que atrae clientes"
+              text="Convertí cualquier producto en contenido que atrare clientes"
               letterClass="animated-shiny-text tgz-glow"
               hoverJump
               delay={35 * speedMult}
               duration={0.8 * speedMult}
               startDelay={0.5 * speedMult}
+              textAlign={isPortrait ? 'center' : 'left'}
               style={{
-                fontSize: isLandscapeShort ? '1.8rem' : 'clamp(2.4rem, 4.5vw, 4rem)',
+                fontSize: isPortrait ? '2rem' : (isLandscapeShort ? '1.8rem' : 'clamp(2.4rem, 4.5vw, 4rem)'),
                 fontFamily: 'Syne, sans-serif',
                 fontWeight: 800,
                 lineHeight: 1.1,
@@ -484,12 +501,13 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
             startDelay={1.1 * speedMult}
             threshold={0.1}
             rootMargin="-50px"
+            textAlign={isPortrait ? 'center' : 'left'}
             style={{
-              fontSize: isLandscapeShort ? '0.85rem' : '1rem',
+              fontSize: isPortrait ? '0.9rem' : (isLandscapeShort ? '0.85rem' : '1rem'),
               color: 'rgba(255,255,255,0.55)',
               lineHeight: isLandscapeShort ? 1.4 : 1.7,
-              margin: 0,
-              maxWidth: isLandscapeShort ? '100%' : '420px',
+              margin: '0 auto',
+              maxWidth: isPortrait ? '300px' : (isLandscapeShort ? '100%' : '420px'),
               fontFamily: 'DM Sans, sans-serif',
             }}
           />
@@ -501,9 +519,10 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
             display: 'flex', 
             gap: isLandscapeShort ? '0.6rem' : '1rem', 
             flexWrap: 'wrap', 
+            justifyContent: isPortrait ? 'center' : 'flex-start',
             alignItems: 'center',
-            transform: isLandscapeShort ? 'scale(0.85)' : 'none',
-            transformOrigin: 'left center'
+            transform: isPortrait ? 'scale(0.95)' : (isLandscapeShort ? 'scale(0.85)' : 'none'),
+            transformOrigin: isPortrait ? 'center' : 'left center'
           }}>
             <MetalButton href="/register" variant="gradient">
               Empezar gratis
