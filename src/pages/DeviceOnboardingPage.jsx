@@ -250,12 +250,12 @@ export default function DeviceOnboardingPage() {
                 transition={{ duration: 0.8, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
                 style={{
                   display: 'flex',
-                  gap: isMobile ? '16px' : '32px',
-                  flexDirection: isMobile ? 'column' : 'row',
-                  alignItems: 'center',
+                  gap: isMobile ? '12px' : '32px',
+                  flexDirection: 'row', // Keep it horizontal like PC
+                  alignItems: 'stretch',
                   justifyContent: 'center',
                   width: '100%',
-                  maxWidth: '800px',
+                  maxWidth: '900px',
                 }}
               >
                 <DeviceCard
@@ -477,17 +477,17 @@ function DeviceCard({ icon, title, description, selected, onSelect, isMobile }) 
       animate={selected ? { scale: 1.02 } : { scale: 1 }}
       transition={{ type: 'spring', stiffness: 260, damping: 20 }}
       style={{
-        width: isMobile ? '100%' : '280px',
+        width: isMobile ? 'calc(50% - 6px)' : '280px',
         maxWidth: '340px',
-        minHeight: isMobile ? 'auto' : '300px',
-        padding: isMobile ? '24px 20px' : '48px 32px 40px',
+        minHeight: isMobile ? '200px' : '300px',
+        padding: isMobile ? '24px 12px' : '48px 32px 40px',
         borderRadius: '28px',
         cursor: 'pointer',
         display: 'flex',
-        flexDirection: isMobile ? 'row' : 'column',
+        flexDirection: 'column', // Back to vertical column internally like PC
         alignItems: 'center',
-        justifyContent: isMobile ? 'flex-start' : 'center',
-        gap: isMobile ? '16px' : '20px',
+        justifyContent: 'center',
+        gap: isMobile ? '12px' : '20px',
         position: 'relative',
         overflow: 'hidden',
         background: selected
@@ -569,28 +569,30 @@ function DeviceCard({ icon, title, description, selected, onSelect, isMobile }) 
       <div style={{
         display: 'flex',
         flexDirection: 'column',
-        alignItems: isMobile ? 'flex-start' : 'center',
+        alignItems: 'center', // Center it like PC
         flex: 1,
       }}>
         <span style={{
           fontFamily: '"Syne", sans-serif',
-          fontSize: isMobile ? '18px' : '22px',
+          fontSize: isMobile ? '15px' : '22px', // Scaled down for row fit
           fontWeight: 700,
           color: selected ? '#fff' : '#CBD5E1',
           transition: 'color 0.3s ease',
           position: 'relative',
           zIndex: 1,
+          textAlign: 'center',
         }}>
           {title}
         </span>
 
         <span style={{
           fontFamily: '"DM Sans", sans-serif',
-          fontSize: '14px',
+          fontSize: isMobile ? '11px' : '14px', // Scaled down for row fit
           color: selected ? '#94A3B8' : '#475569',
           transition: 'color 0.3s ease',
           position: 'relative',
           zIndex: 1,
+          textAlign: 'center',
         }}>
           {description}
         </span>
