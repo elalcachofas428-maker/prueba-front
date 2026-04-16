@@ -83,9 +83,13 @@ export default function DeviceOnboardingPage() {
 
     setTimeout(() => {
       localStorage.setItem('leadbook_device', device);
-      // Both PC and Mobile now proceed directly to the introduction, 
-      // as we now support a vertical mobile layout.
-      setStep('intro');
+      
+      if (device === 'pc') {
+        setStep('intro');
+      } else {
+        // Restore rotation advisory for mobile users
+        setStep('rotate');
+      }
     }, 400);
   }, []);
 
