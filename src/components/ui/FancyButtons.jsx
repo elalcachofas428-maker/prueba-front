@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import HoverLetters from './HoverLetters'
 
 /* ═══════════════════════════════════════════════
    COLOR VARIANTS — adapted to LeadBook palette
@@ -167,7 +168,9 @@ export function MetalButton({
           }} />
         )}
 
-        {children}
+        {typeof children === 'string'
+          ? <HoverLetters>{children}</HoverLetters>
+          : children}
       </Comp>
     </div>
   )
@@ -261,7 +264,9 @@ export function LiquidButton({
 
       {/* Content */}
       <span style={{ position: 'relative', zIndex: 10, pointerEvents: 'none' }}>
-        {children}
+        {typeof children === 'string'
+          ? <HoverLetters>{children}</HoverLetters>
+          : children}
       </span>
 
       {/* SVG Glass Filter Definition */}

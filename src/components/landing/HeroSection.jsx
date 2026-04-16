@@ -1,10 +1,88 @@
-import { Suspense, lazy, useRef, useEffect, useState, Component } from 'react'
+import { Suspense, lazy, useRef, useEffect, useState, Component, useCallback } from 'react'
 import gsap from 'gsap'
 import { MetalButton, LiquidButton } from '../ui/FancyButtons'
 import SplitText from '../ui/SplitText'
 import Logo from '../Logo'
 
 import { InteractiveRobotSpline } from '../ui/interactive-3d-robot'
+import HoverLetters from '../ui/HoverLetters'
+import { AnimatedText } from '../ui/AnimatedText'
+
+/* ── TextGlowZone ──────────────────────────────────────
+   Invisible container that tracks pointer position and
+   applies a radial glow that clips to TEXT OUTLINES only.
+   No card, no background, no border — just text glow.
+   ────────────────────────────────────────────────────── */
+const textGlowStyleId = 'text-glow-zone-styles'
+if (typeof document !== 'undefined' && !document.getElementById(textGlowStyleId)) {
+  const s = document.createElement('style')
+  s.id = textGlowStyleId
+  s.textContent = `
+    .text-glow-zone .tgz-glow {
+      --spot-size: 340px;
+      --hue: calc(280 + (var(--xp, 0) * 120));
+    }
+    .text-glow-zone .tgz-glow,
+    .text-glow-zone .tgz-glow * {
+      -webkit-text-stroke: 1.5px transparent;
+    }
+    .text-glow-zone .tgz-glow {
+      background-image:
+        radial-gradient(
+          var(--spot-size) var(--spot-size) at
+          calc(var(--mx, 0) * 1px)
+          calc(var(--my, 0) * 1px),
+          hsl(var(--hue, 280) 100% 68% / 0.95),
+          transparent 100%
+        ),
+        linear-gradient(rgba(255,255,255,0.12), rgba(255,255,255,0.12));
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+    .text-glow-zone .tgz-glow-subtle,
+    .text-glow-zone .tgz-glow-subtle * {
+      -webkit-text-stroke: 1px transparent;
+    }
+    .text-glow-zone .tgz-glow-subtle {
+      background-image:
+        radial-gradient(
+          var(--spot-size) var(--spot-size) at
+          calc(var(--mx, 0) * 1px)
+          calc(var(--my, 0) * 1px),
+          hsl(var(--hue, 280) 100% 68% / 0.7),
+          transparent 100%
+        ),
+        linear-gradient(rgba(255,255,255,0.06), rgba(255,255,255,0.06));
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+  `
+  document.head.appendChild(s)
+}
+
+function TextGlowZone({ children, style, className = '' }) {
+  const ref = useRef(null)
+
+  const handlePointer = useCallback((e) => {
+    const el = ref.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    el.style.setProperty('--mx', (e.clientX - rect.left).toFixed(1))
+    el.style.setProperty('--my', (e.clientY - rect.top).toFixed(1))
+    el.style.setProperty('--xp', (e.clientX / window.innerWidth).toFixed(3))
+  }, [])
+
+  useEffect(() => {
+    document.addEventListener('pointermove', handlePointer)
+    return () => document.removeEventListener('pointermove', handlePointer)
+  }, [handlePointer])
+
+  return (
+    <div ref={ref} className={`text-glow-zone ${className}`} style={style}>
+      {children}
+    </div>
+  )
+}
 
 /* ── inline keyframes (inyectadas una sola vez) ── */
 const auroraStyleId = 'hero-aurora-keyframes'
@@ -79,6 +157,20 @@ function HeroAnimatedBlock({ children, delay = 0 }) {
 }
 
 export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
+  const [animationKey, setAnimationKey] = useState(0);
+  const [isFirstRun, setIsFirstRun] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnimationKey(prev => prev + 1);
+      setIsFirstRun(false);
+    }, 20000); // Repeat animations every 20 seconds
+    return () => clearInterval(interval);
+  }, []);
+
+  // 40% faster means it takes 60% of the normal time (0.6 multiplier)
+  const speedMult = isFirstRun ? 1 : 0.6;
+
   return (
     <section 
       style={{
@@ -309,101 +401,107 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
         pointerEvents: 'none',
       }} />
 
-      {/* ── TEXTO ── */}
-      <div style={{
+      {/* ── TEXTO CON GLOW EN CONTORNO DE LETRAS (sin carta) ── */}
+      <TextGlowZone key={animationKey} style={{
         position: 'absolute',
-        top: 0, left: 0,
-        height: '100%',
-        width: '55%',
+        top: '10%', left: '4%',
+        height: '80%',
+        width: '54%',
         zIndex: 4,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        padding: '0 0 0 5rem',
+        padding: '3rem',
         gap: '1.5rem',
       }}>
 
-        {/* Nombre de marca */}
-        <HeroAnimatedBlock delay={0.1}>
-          <div style={{
-            fontSize: 'clamp(2.8rem, 5vw, 4.5rem)',
-            fontFamily: 'Syne, sans-serif',
-            fontWeight: 800,
-            color: 'white',
-            letterSpacing: '-0.04em',
-            lineHeight: 1,
-          }}>LeadBook</div>
+        {/* Nombre de marca — Shiny animated gradient */}
+        <HeroAnimatedBlock delay={0.1 * speedMult}>
+          <div className="animated-shiny-text">
+            <HoverLetters tag="div" style={{
+              fontSize: 'clamp(2.8rem, 5vw, 4.5rem)',
+              fontFamily: 'Syne, sans-serif',
+              fontWeight: 800,
+              letterSpacing: '-0.04em',
+              lineHeight: 1,
+            }}>LeadBook</HoverLetters>
+          </div>
         </HeroAnimatedBlock>
 
-        {/* Título — dos SplitText secuenciales */}
-        <h1 style={{
-          fontSize: 'clamp(2.4rem, 4.5vw, 4rem)',
-          fontFamily: 'Syne, sans-serif',
-          fontWeight: 800,
-          lineHeight: 1.12,
-          letterSpacing: '-0.04em',
-          margin: 0,
-          color: 'white',
-        }}>
+        {/* Título principal — dos colores */}
+        <div className="tgz-glow">
+          <HeroAnimatedBlock delay={0.4 * speedMult}>
+            <h1 style={{
+              fontSize: 'clamp(2.4rem, 4.5vw, 4rem)',
+              fontFamily: 'Syne, sans-serif',
+              fontWeight: 800,
+              lineHeight: 1.12,
+              letterSpacing: '-0.04em',
+              margin: 0,
+            }}>
+              <SplitText
+                text="Convertí cualquier producto en "
+                tag="span"
+                splitType="chars"
+                delay={25 * speedMult}
+                duration={0.6 * speedMult}
+                ease="power3.out"
+                from={{ opacity: 0, y: 30 }}
+                to={{ opacity: 1, y: 0 }}
+                startDelay={0.2 * speedMult}
+                threshold={0.1}
+                rootMargin="-50px"
+                hoverJump
+                style={{ color: 'white' }}
+              />
+              <SplitText
+                text="contenido que atrae clientes"
+                tag="span"
+                splitType="words"
+                delay={80 * speedMult}
+                duration={0.8 * speedMult}
+                ease="power3.out"
+                from={{ opacity: 0, y: 30 }}
+                to={{ opacity: 1, y: 0 }}
+                startDelay={0.7 * speedMult}
+                threshold={0.1}
+                rootMargin="-50px"
+                hoverJump
+                colorCycle
+                style={{ color: '#00D4FF' }}
+              />
+            </h1>
+          </HeroAnimatedBlock>
+        </div>
+
+        {/* Subtítulo — glow sutil en contorno */}
+        <div className="tgz-glow-subtle">
           <SplitText
-            text="Convertí cualquier producto en "
-            tag="span"
-            splitType="chars"
-            delay={25}
-            duration={0.6}
-            ease="power3.out"
-            from={{ opacity: 0, y: 30 }}
-            to={{ opacity: 1, y: 0 }}
-            startDelay={0.2}
-            threshold={0.1}
-            rootMargin="-50px"
-          />
-          <SplitText
-            text="contenido que atrae clientes"
-            tag="span"
+            text="Automatizá tu marketing con IA. Crea materiales premium en segundos, sin complicaciones."
+            tag="p"
+            hoverJump
             splitType="words"
-            delay={80}
-            duration={0.8}
+            delay={30 * speedMult}
+            duration={0.5 * speedMult}
             ease="power3.out"
-            from={{ opacity: 0, y: 30 }}
+            from={{ opacity: 0, y: 20 }}
             to={{ opacity: 1, y: 0 }}
-            startDelay={0.7}
+            startDelay={1.1 * speedMult}
             threshold={0.1}
             rootMargin="-50px"
-            letterStyle={{
-              background: 'linear-gradient(135deg, #00D4FF 0%, #7C3AED 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
+            style={{
+              fontSize: '1rem',
+              color: 'rgba(255,255,255,0.55)',
+              lineHeight: 1.7,
+              margin: 0,
+              maxWidth: '420px',
+              fontFamily: 'DM Sans, sans-serif',
             }}
           />
-        </h1>
-
-        {/* Subtítulo */}
-        <SplitText
-          text="Automatizá tu marketing con IA. Crea materiales premium en segundos, sin complicaciones."
-          tag="p"
-          splitType="words"
-          delay={30}
-          duration={0.5}
-          ease="power3.out"
-          from={{ opacity: 0, y: 20 }}
-          to={{ opacity: 1, y: 0 }}
-          startDelay={1.1}
-          threshold={0.1}
-          rootMargin="-50px"
-          style={{
-            fontSize: '1rem',
-            color: 'rgba(255,255,255,0.55)',
-            lineHeight: 1.7,
-            margin: 0,
-            maxWidth: '420px',
-            fontFamily: 'DM Sans, sans-serif',
-          }}
-        />
+        </div>
 
         {/* Botones — fade in con GSAP */}
-        <HeroAnimatedBlock delay={1.5}>
+        <HeroAnimatedBlock delay={1.5 * speedMult}>
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
             <MetalButton href="/register" variant="gradient">
               Empezar gratis
@@ -414,41 +512,42 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
           </div>
         </HeroAnimatedBlock>
 
-        {/* Social proof — fade in con GSAP */}
-        <HeroAnimatedBlock delay={1.9}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ display: 'flex' }}>
-              {['A','M','C','S'].map((l, i) => (
-                <div key={i} style={{
-                  width: '30px', height: '30px',
-                  borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #1f2937, #111827)',
-                  border: '2px solid #000',
-                  display: 'flex', alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '0.65rem', fontWeight: 700,
-                  color: '#00D4FF',
-                  marginLeft: i > 0 ? '-8px' : '0',
-                }}>{l}</div>
-              ))}
-            </div>
-            <div>
-              <p style={{
-                fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)',
-                margin: 0, textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                fontFamily: 'Manrope, sans-serif',
-              }}>
-                +500 negocios confían en nosotros
-              </p>
-              <div style={{ color: '#fbbf24', fontSize: '0.8rem', marginTop: '2px' }}>
-                ★★★★★ <span style={{ color: 'rgba(255,255,255,0.3)', marginLeft: '4px' }}>4.9/5</span>
+        {/* Social proof — glow sutil en contorno */}
+        <div className="tgz-glow-subtle">
+          <HeroAnimatedBlock delay={1.9 * speedMult}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ display: 'flex' }}>
+                {['A','M','C','S'].map((l, i) => (
+                  <div key={i} style={{
+                    width: '30px', height: '30px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #1f2937, #111827)',
+                    border: '2px solid #000',
+                    display: 'flex', alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '0.65rem', fontWeight: 700,
+                    color: '#00D4FF',
+                    marginLeft: i > 0 ? '-8px' : '0',
+                  }}>{l}</div>
+                ))}
+              </div>
+              <div>
+                <HoverLetters tag="p" style={{
+                  fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)',
+                  margin: 0, textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  fontFamily: 'Manrope, sans-serif',
+                }}>+500 negocios confían en nosotros</HoverLetters>
+                <div style={{ color: '#fbbf24', fontSize: '0.8rem', marginTop: '2px' }}>
+                  <HoverLetters tag="span">★★★★★</HoverLetters>
+                  <HoverLetters tag="span" style={{ color: 'rgba(255,255,255,0.3)', marginLeft: '4px' }}>4.9/5</HoverLetters>
+                </div>
               </div>
             </div>
-          </div>
-        </HeroAnimatedBlock>
+          </HeroAnimatedBlock>
+        </div>
 
-      </div>
+      </TextGlowZone>
     </section>
   )
 }

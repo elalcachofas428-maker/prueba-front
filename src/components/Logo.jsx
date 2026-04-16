@@ -15,13 +15,17 @@ const Logo = ({ size = 'default' }) => {
   const finalHeight = sizes[size] || sizes.default;
 
   return (
-    <img 
-      src={logoLeadBook} 
-      alt="LeadBook" 
+    <video 
+      src="/navbar-logo.mp4?v=2" 
+      autoPlay
+      loop
+      muted
+      playsInline
       style={{ 
         height: finalHeight, 
         objectFit: 'contain',
         borderRadius: '6px',
+        pointerEvents: 'none'
       }} 
     />
   );

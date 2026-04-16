@@ -4,6 +4,7 @@ import { Menu, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Logo from '../Logo';
 import { NavbarLamp } from '../ui/NavbarLamp';
+import GlassSurface from '../ui/GlassSurface';
 
 const NAV_LINKS = [
   { label: 'Inicio',        id: 'inicio' },
@@ -63,7 +64,7 @@ const LandingNavbar = ({ seccionActiva, setSeccionActiva }) => {
 
         <div
           className={[
-            'mx-auto mt-2 max-w-6xl px-6 transition-all duration-300 lg:px-12',
+            'mx-auto mt-2 max-w-6xl w-full px-6 transition-all duration-300 lg:px-12',
             isScrolled
               ? 'bg-[rgba(7,11,20,0.75)] max-w-4xl rounded-2xl border border-[rgba(0,196,212,0.15)] backdrop-blur-lg lg:px-5'
               : '',
@@ -77,7 +78,14 @@ const LandingNavbar = ({ seccionActiva, setSeccionActiva }) => {
                 onClick={() => navegarA('inicio')}
                 className="flex items-center gap-3 bg-transparent border-none cursor-pointer p-0"
               >
-                <Logo size="small" />
+                <video 
+                  src="/navbar-logo.mp4?v=1" 
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline 
+                  style={{ height: '32px', borderRadius: '6px', objectFit: 'contain' }}
+                />
                 <span className="text-white font-semibold text-base">LeadBook</span>
               </button>
 
@@ -184,38 +192,37 @@ const LandingNavbar = ({ seccionActiva, setSeccionActiva }) => {
                   </>
                 ) : (
                   <>
-                    {/* Iniciar sesión: visible always; hidden on desktop when scrolled */}
-                    <button
-                      onClick={() => navigate('/login')}
-                      className={[
-                        'bg-transparent border border-white/20 text-white/80 text-sm px-4 py-2 rounded-full cursor-pointer transition-all hover:text-white hover:border-white/50',
-                        isScrolled ? 'lg:hidden' : '',
-                      ].join(' ')}
-                    >
-                      Iniciar sesión
-                    </button>
+                    {/* Mobile Only: Stacked buttons */}
+                    <div className="flex w-full flex-col gap-3 lg:hidden">
+                      <button
+                        onClick={() => navigate('/login')}
+                        className="bg-transparent border border-white/20 text-white/80 text-sm px-4 py-2 rounded-full cursor-pointer hover:text-white transition-all"
+                      >
+                        Iniciar sesión
+                      </button>
+                      <button
+                        onClick={() => navigate('/register')}
+                        className="bg-[#00c4d4] text-[#070B14] border-none px-5 py-2 rounded-full text-sm font-semibold cursor-pointer hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,196,212,0.25)] transition-all"
+                      >
+                        Empezar gratis →
+                      </button>
+                    </div>
 
-                    {/* Empezar gratis: always visible on mobile; on desktop hidden when scrolled */}
-                    <button
-                      onClick={() => navigate('/register')}
-                      className={[
-                        'bg-[#00c4d4] text-[#070B14] border-none px-5 py-2 rounded-full text-sm font-semibold cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,196,212,0.25)]',
-                        isScrolled ? 'lg:hidden' : '',
-                      ].join(' ')}
-                    >
-                      Empezar gratis →
-                    </button>
-
-                    {/* Single CTA shown only when scrolled on desktop */}
-                    <button
-                      onClick={() => navigate('/register')}
-                      className={[
-                        'bg-[#00c4d4] text-[#070B14] border-none px-5 py-2 rounded-full text-sm font-semibold cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,196,212,0.25)]',
-                        isScrolled ? 'lg:inline-flex' : 'hidden',
-                      ].join(' ')}
-                    >
-                      Empezar gratis →
-                    </button>
+                    {/* Desktop Only: Pure text links */}
+                    <div className="hidden lg:flex items-center gap-6">
+                      <span
+                        onClick={() => navigate('/login')}
+                        className="text-[#e2e8f0] text-[15px] cursor-pointer hover:text-white transition-colors select-none"
+                      >
+                        Iniciar sesión
+                      </span>
+                      <span
+                        onClick={() => navigate('/register')}
+                        className="text-[#00c4d4] text-[15px] font-medium cursor-pointer hover:text-[#7cf0f5] transition-colors select-none"
+                      >
+                        Empezar gratis →
+                      </span>
+                    </div>
                   </>
                 )}
               </div>

@@ -2,6 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Letter jump — repeats every 10s in wave ── */
+@keyframes letterJump {
+  0%    { transform: translateY(0)     rotate(0deg);  }
+  3%    { transform: translateY(-14px) rotate(-4deg); }
+  6%    { transform: translateY(-7px)  rotate(2deg);  }
+  8.5%  { transform: translateY(-2px)  rotate(0deg);  }
+  11%   { transform: translateY(0)     rotate(0deg);  }
+  100%  { transform: translateY(0)     rotate(0deg);  }
+}
+
+.split-hover-jump {
+  display: inline-block;
+  animation: letterJump 10s linear infinite;
+  animation-delay: var(--jump-delay, 0s);
+}
+
+/* ── Hero color cycle — white → cyan → violet, wave left-to-right ── */
+@keyframes heroColorCycle {
+  0%, 100% { color: #ffffff; }
+  35%       { color: #00D4FF; }
+  70%       { color: #7C3AED; }
+}
+
+.hero-color-cycle {
+  display: inline-block;
+  animation: heroColorCycle 8s ease-in-out infinite;
+  animation-delay: var(--jump-delay, 0s);
+}
+
 /* ============================================
    LEADBOOK — DESIGN SYSTEM v1.0
    ============================================ */
@@ -836,6 +865,37 @@ nav a:hover::after {
 }
 .glow-border:hover::after {
   background: linear-gradient(135deg, rgba(0,212,255,0.3), rgba(96,1,209,0.3));
+}
+
+/* ── Animated Shiny Text ── */
+.animated-shiny-text {
+  background: linear-gradient(
+    90deg,
+    #7C3AED 0%,
+    #00D4FF 20%,
+    #ffffff 45%,
+    #ffffff 55%,
+    #00D4FF 80%,
+    #7C3AED 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent !important;
+  animation: shine 3s linear infinite;
+  display: inline-block;
+  min-width: 1px;
+}
+
+.animated-shiny-text * {
+  -webkit-text-fill-color: transparent !important;
+  background-clip: inherit;
+  -webkit-background-clip: inherit;
+}
+
+@keyframes shine {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
 }
 
 

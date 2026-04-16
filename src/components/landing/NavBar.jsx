@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Home, Zap, Settings, Layers, CreditCard, Menu, X } from 'lucide-react'
 import Logo from '../Logo'
-import GlassSurface from '../ui/GlassSurface'
 
 
 const NAV_LINKS = [
@@ -244,40 +243,23 @@ export default function NavBar({ user, onLogout, activeSection, onNavigate }) {
             </>
           ) : (
             <>
-              {/* Iniciar sesión — glass pill oscuro */}
-              <GlassSurface
-                width="auto"
-                height="auto"
-                borderRadius={9999}
-                brightness={30}
-                opacity={0.7}
-                blur={14}
-                distortionScale={-160}
-                displace={0.4}
-              >
+              {/* Contenedor SIN CÁPSULAS: PURAMENTE TEXTOS */}
+              <div style={{ display: 'flex', gap: '20px', alignItems: 'center', padding: '0 8px' }}>
+                {/* Iniciar sesión — text only */}
                 <Link to="/login" style={{
                   color: 'rgba(255,255,255,0.75)', fontSize: '0.9rem',
                   padding: '8px 16px', textDecoration: 'none',
                   fontWeight: 600, whiteSpace: 'nowrap',
                   fontFamily: 'DM Sans, sans-serif',
-                }}>Iniciar sesión</Link>
-              </GlassSurface>
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={(e) => e.target.style.color = '#fff'}
+                onMouseLeave={(e) => e.target.style.color = 'rgba(255,255,255,0.75)'}
+                >
+                  Iniciar sesión
+                </Link>
 
-              {/* Empezar gratis → — glass pill con gradiente cyan */}
-              <GlassSurface
-                width="auto"
-                height="auto"
-                borderRadius={9999}
-                brightness={55}
-                opacity={0.93}
-                blur={12}
-                distortionScale={-180}
-                redOffset={0}
-                greenOffset={10}
-                blueOffset={20}
-                displace={0.5}
-                mixBlendMode="screen"
-              >
+                {/* Empezar gratis → — text only */}
                 <Link to="/register" style={{
                   background: 'linear-gradient(135deg, #00D4FF, #7C3AED)',
                   WebkitBackgroundClip: 'text',
@@ -287,8 +269,14 @@ export default function NavBar({ user, onLogout, activeSection, onNavigate }) {
                   padding: '8px 18px', textDecoration: 'none',
                   whiteSpace: 'nowrap',
                   fontFamily: 'DM Sans, sans-serif',
-                }}>Empezar gratis →</Link>
-              </GlassSurface>
+                  transition: 'opacity 0.2s',
+                }}
+                onMouseEnter={(e) => e.target.style.opacity = '0.8'}
+                onMouseLeave={(e) => e.target.style.opacity = '1'}
+                >
+                  Empezar gratis →
+                </Link>
+              </div>
             </>
           )}
         </div>
@@ -341,49 +329,31 @@ export default function NavBar({ user, onLogout, activeSection, onNavigate }) {
               </>
             ) : (
               <>
-                <GlassSurface
-                  width="auto"
-                  height="auto"
-                  borderRadius={9999}
-                  brightness={30}
-                  opacity={0.7}
-                  blur={14}
-                  distortionScale={-160}
-                  displace={0.4}
-                >
+                <div style={{ display: 'flex', gap: '15px', alignItems: 'center', padding: '0 5px' }}>
+                  {/* Iniciar sesión — text only */}
                   <Link to="/login" style={{
                     color: 'rgba(255,255,255,0.75)', fontSize: '0.85rem',
-                    padding: '10px 20px', textDecoration: 'none',
+                    padding: '10px 16px', textDecoration: 'none',
                     fontWeight: 600, whiteSpace: 'nowrap',
                     fontFamily: 'DM Sans, sans-serif',
-                  }}>Iniciar sesión</Link>
-                </GlassSurface>
+                  }}>
+                    Iniciar sesión
+                  </Link>
 
-                <GlassSurface
-                  width="auto"
-                  height="auto"
-                  borderRadius={9999}
-                  brightness={55}
-                  opacity={0.93}
-                  blur={12}
-                  distortionScale={-180}
-                  redOffset={0}
-                  greenOffset={10}
-                  blueOffset={20}
-                  displace={0.5}
-                  mixBlendMode="screen"
-                >
+                  {/* Empezar gratis → — text only */}
                   <Link to="/register" style={{
                     background: 'linear-gradient(135deg, #00D4FF, #7C3AED)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
                     fontSize: '0.85rem', fontWeight: 700,
-                    padding: '10px 24px', textDecoration: 'none',
+                    padding: '10px 18px', textDecoration: 'none',
                     whiteSpace: 'nowrap',
                     fontFamily: 'DM Sans, sans-serif',
-                  }}>Empezar gratis →</Link>
-                </GlassSurface>
+                  }}>
+                    Empezar gratis →
+                  </Link>
+                </div>
               </>
             )}
           </div>

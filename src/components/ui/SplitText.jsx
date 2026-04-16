@@ -39,6 +39,8 @@ export default function SplitText({
   startDelay = 0,
   tag: Tag = 'div',
   onLetterAnimationComplete,
+  hoverJump = false,
+  colorCycle = false,
 }) {
   const containerRef = useRef(null)
   const hasAnimated = useRef(false)
@@ -48,49 +50,73 @@ export default function SplitText({
     const container = containerRef.current
     if (!container || !text) return
 
-    // ── Split into items ──
-    const items = splitType === 'chars'
-      ? text.split('')
-      : text.split(/(\s+)/)
-
     container.innerHTML = ''
     const animatable = []
+    let jumpIndex = 0
 
-    items.forEach((item) => {
-      // Whitespace — render as inline space
-      if (/^\s+$/.test(item)) {
-        const spacer = document.createElement('span')
-        spacer.innerHTML = '&nbsp;'
-        spacer.style.display = 'inline-block'
-        // For chars mode, preserve space width
-        if (splitType === 'chars') {
-          spacer.style.width = '0.3em'
-        }
-        container.appendChild(spacer)
-        return
-      }
-
-      // Empty string (edge case from split)
-      if (item === '') return
-
+    const createCharSpan = (char) => {
       const span = document.createElement('span')
-      span.textContent = item
+      span.textContent = char
       span.style.display = 'inline-block'
-      span.style.willChange = 'transform, opacity'
-
-      // Apply per-letter/word custom styles (e.g. gradient)
+      // Removing will-change as it often conflicts with -webkit-background-clip: text
+      if (hoverJump || colorCycle) {
+        span.style.setProperty('--jump-delay', `${jumpIndex * 0.045}s`)
+        jumpIndex++
+      }
+      if (hoverJump) span.classList.add('split-hover-jump')
+      if (colorCycle) span.classList.add('hero-color-cycle')
+      
+      // Force inherit to ensure background-clip transparency works
+      span.style.color = 'inherit'
+      
       if (letterStyle && Object.keys(letterStyle).length > 0) {
         Object.entries(letterStyle).forEach(([key, value]) => {
           span.style[key] = value
         })
       }
-
-      // Set initial hidden state
       gsap.set(span, from)
-
-      container.appendChild(span)
       animatable.push(span)
-    })
+      return span
+    }
+
+    if (splitType === 'chars') {
+      // ── Split by chars but group by word so line-break only between words ──
+      const words = text.split(/(\s+)/)
+      words.forEach((segment) => {
+        if (segment === '') return
+        if (/^\s+$/.test(segment)) {
+          // Space between words
+          const spacer = document.createElement('span')
+          spacer.innerHTML = '&nbsp;'
+          spacer.style.display = 'inline-block'
+          spacer.style.width = '0.3em'
+          container.appendChild(spacer)
+          return
+        }
+        // Wrap each word's chars in a nowrap container
+        const wordWrap = document.createElement('span')
+        wordWrap.style.display = 'inline-block'
+        wordWrap.style.whiteSpace = 'nowrap'
+        segment.split('').forEach((char) => {
+          wordWrap.appendChild(createCharSpan(char))
+        })
+        container.appendChild(wordWrap)
+      })
+    } else {
+      // ── Split by words ──
+      const items = text.split(/(\s+)/)
+      items.forEach((item) => {
+        if (/^\s+$/.test(item)) {
+          const spacer = document.createElement('span')
+          spacer.innerHTML = '&nbsp;'
+          spacer.style.display = 'inline-block'
+          container.appendChild(spacer)
+          return
+        }
+        if (item === '') return
+        container.appendChild(createCharSpan(item))
+      })
+    }
 
     spansRef.current = animatable
 

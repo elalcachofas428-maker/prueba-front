@@ -10,6 +10,7 @@ import LandingPage   from './pages/LandingPage';
 import LoginPage     from './pages/LoginPage';
 import RegisterPage  from './pages/RegisterPage';
 import PreciosPage   from './pages/PreciosPage';
+import DeviceOnboardingPage from './pages/DeviceOnboardingPage';
 
 // Páginas protegidas
 import DashboardPage  from './pages/DashboardPage';
@@ -83,7 +84,8 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         {/* Públicas */}
-        <Route path="/"        element={<LandingPage />} />
+        <Route path="/" element={<DeviceOnboardingPage />} />
+        <Route path="/landing" element={<LandingPage />} />
         <Route path="/precios" element={<PreciosPage />} />
         <Route path="/login"   element={<PublicRoute><LoginPage /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
