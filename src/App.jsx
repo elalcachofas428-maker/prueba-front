@@ -79,45 +79,50 @@ function PublicRoute({ children }) {
   return children;
 }
 
+// Components
+import RotationWrapper from './components/layout/RotationWrapper';
+
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Públicas */}
-        <Route path="/" element={<DeviceOnboardingPage />} />
-        <Route path="/landing" element={<LandingPage />} />
-        <Route path="/precios" element={<PreciosPage />} />
-        <Route path="/login"   element={<PublicRoute><LoginPage /></PublicRoute>} />
-        <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
-        <Route path="/recuperar-password" element={<PublicRoute><RecuperarPasswordPage /></PublicRoute>} />
+      <RotationWrapper>
+        <Routes>
+          {/* Públicas */}
+          <Route path="/" element={<DeviceOnboardingPage />} />
+          <Route path="/landing" element={<LandingPage />} />
+          <Route path="/precios" element={<PreciosPage />} />
+          <Route path="/login"   element={<PublicRoute><LoginPage /></PublicRoute>} />
+          <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+          <Route path="/recuperar-password" element={<PublicRoute><RecuperarPasswordPage /></PublicRoute>} />
 
-        {/* Pago */}
-        <Route path="/pago-exitoso" element={<ProtectedRoute><PagoExitosoPage /></ProtectedRoute>} />
-        <Route path="/pago-fallido" element={<ProtectedRoute><PagoFallidoPage /></ProtectedRoute>} />
-        <Route path="/pago-pendiente" element={<ProtectedRoute><PagoExitosoPage /></ProtectedRoute>} />
+          {/* Pago */}
+          <Route path="/pago-exitoso" element={<ProtectedRoute><PagoExitosoPage /></ProtectedRoute>} />
+          <Route path="/pago-fallido" element={<ProtectedRoute><PagoFallidoPage /></ProtectedRoute>} />
+          <Route path="/pago-pendiente" element={<ProtectedRoute><PagoExitosoPage /></ProtectedRoute>} />
 
-        {/* Selección de Plan (Protegida) */}
-        <Route path="/select-plan" element={<ProtectedRoute><SelectPlanPage /></ProtectedRoute>} />
+          {/* Selección de Plan (Protegida) */}
+          <Route path="/select-plan" element={<ProtectedRoute><SelectPlanPage /></ProtectedRoute>} />
 
-        {/* Onboarding (protegida pero sin AppLayout) */}
-        <Route path="/onboarding" element={<ProtectedRoute><OnboardingPage /></ProtectedRoute>} />
+          {/* Onboarding (protegida pero sin AppLayout) */}
+          <Route path="/onboarding" element={<ProtectedRoute><OnboardingPage /></ProtectedRoute>} />
 
-        {/* Protegidas con AppLayout */}
-        <Route element={<ProtectedRoute><FormProvider><AppLayout /></FormProvider></ProtectedRoute>}>
-          <Route path="/dashboard"   element={<DashboardPage />} />
-          <Route path="/nuevo"       element={<NuevoPage />} />
-          <Route path="/historial"   element={<HistorialPage />} />
-          <Route path="/resultados"  element={<ResultadosPage />} />
-          <Route path="/cuenta"      element={<CuentaPage />} />
-        </Route>
+          {/* Protegidas con AppLayout */}
+          <Route element={<ProtectedRoute><FormProvider><AppLayout /></FormProvider></ProtectedRoute>}>
+            <Route path="/dashboard"   element={<DashboardPage />} />
+            <Route path="/nuevo"       element={<NuevoPage />} />
+            <Route path="/historial"   element={<HistorialPage />} />
+            <Route path="/resultados"  element={<ResultadosPage />} />
+            <Route path="/cuenta"      element={<CuentaPage />} />
+          </Route>
 
-        <Route element={<AdminRoute><AppLayout /></AdminRoute>}>
-          <Route path="/admin" element={<AdminPage />} />
-        </Route>
-        
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          <Route element={<AdminRoute><AppLayout /></AdminRoute>}>
+            <Route path="/admin" element={<AdminPage />} />
+          </Route>
+          
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </RotationWrapper>
     </BrowserRouter>
   );
 }
