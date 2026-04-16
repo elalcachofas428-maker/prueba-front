@@ -426,32 +426,47 @@ export default function HeroSection({ isActive, onNavigate, onSceneReady }) {
         gap: isLandscapeShort ? '0.6rem' : '1.5rem',
       }}>
 
-        {/* Nombre de marca — Shiny animated gradient */}
+        {/* Nombre de marca — SplitText con entrada animada + Shiny */}
         <HeroAnimatedBlock delay={0.1 * speedMult}>
-          <div className="animated-shiny-text">
-            <HoverLetters tag="div" style={{
-              fontSize: isLandscapeShort ? '2rem' : 'clamp(2.8rem, 5vw, 4.5rem)',
-              fontFamily: 'Syne, sans-serif',
-              fontWeight: 800,
-              letterSpacing: '-0.04em',
-              lineHeight: 1,
-            }}>LeadBook</HoverLetters>
+          <div className="tgz-glow">
+            <SplitText
+              text="LeadBook"
+              className="animated-shiny-text"
+              hoverJump
+              delay={40 * speedMult}
+              duration={0.7 * speedMult}
+              startDelay={0.2 * speedMult}
+              style={{
+                fontSize: isLandscapeShort ? '2rem' : 'clamp(2.8rem, 5vw, 4.5rem)',
+                fontFamily: 'Syne, sans-serif',
+                fontWeight: 800,
+                letterSpacing: '-0.04em',
+                lineHeight: 1,
+              }}
+            />
           </div>
         </HeroAnimatedBlock>
 
-        {/* Título principal — Shiny animated gradient */}
-        <HeroAnimatedBlock delay={0.4 * speedMult}>
-          <h1 className="animated-shiny-text" style={{
-            fontSize: isLandscapeShort ? '1.8rem' : 'clamp(2.4rem, 4.5vw, 4rem)',
-            fontFamily: 'Syne, sans-serif',
-            fontWeight: 800,
-            lineHeight: 1.1,
-            letterSpacing: '-0.04em',
-            margin: 0,
-          }}>
-            <HoverLetters tag="span">Convertí cualquier producto en </HoverLetters>
-            <HoverLetters tag="span">contenido que atrae clientes</HoverLetters>
-          </h1>
+        {/* Título principal — SplitText con entrada animada + Shiny */}
+        <HeroAnimatedBlock delay={0.3 * speedMult}>
+          <div className="tgz-glow">
+            <SplitText
+              text="Convertí cualquier producto en contenido que atrae clientes"
+              className="animated-shiny-text"
+              hoverJump
+              delay={35 * speedMult}
+              duration={0.8 * speedMult}
+              startDelay={0.5 * speedMult}
+              style={{
+                fontSize: isLandscapeShort ? '1.8rem' : 'clamp(2.4rem, 4.5vw, 4rem)',
+                fontFamily: 'Syne, sans-serif',
+                fontWeight: 800,
+                lineHeight: 1.1,
+                letterSpacing: '-0.04em',
+                margin: 0,
+              }}
+            />
+          </div>
         </HeroAnimatedBlock>
 
         {/* Subtítulo — glow sutil en contorno */}
