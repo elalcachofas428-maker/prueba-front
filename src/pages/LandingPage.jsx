@@ -12,7 +12,7 @@ import { useAuth } from '../context/AuthContext'
 
 /* Ordered sections with metadata */
 const SECTIONS = [
-  { id: 'inicio',        label: 'Inicio',          icon: <Home size={16} /> },
+  { id: 'home',          label: 'Home',            icon: <Home size={16} /> },
   { id: 'funciones',     label: 'Funciones',       icon: <Zap size={16} /> },
   { id: 'como-funciona', label: 'Cómo funciona',   icon: <Settings size={16} /> },
   { id: 'formatos',      label: 'Formatos',        icon: <Layers size={16} /> },
@@ -21,7 +21,7 @@ const SECTIONS = [
 
 export default function LandingPage() {
   const { user, logout } = useAuth()
-  const [activeSection, setActiveSection] = useState('inicio')
+  const [activeSection, setActiveSection] = useState('home')
   const [sceneReady, setSceneReady] = useState(false)
 
   const handleSceneReady = useCallback(() => {
@@ -38,7 +38,7 @@ export default function LandingPage() {
 
   /* Map section id → content component */
   const sectionContent = {
-    'inicio':        <HeroSection isActive={activeSection === 'inicio'} onNavigate={setActiveSection} onSceneReady={handleSceneReady} />,
+    'home':          <HeroSection isActive={activeSection === 'home'} onNavigate={setActiveSection} onSceneReady={handleSceneReady} />,
     'funciones':     <FeaturesSection />,
     'como-funciona': <HowItWorksSection />,
     'formatos':      <FormatsSection />,

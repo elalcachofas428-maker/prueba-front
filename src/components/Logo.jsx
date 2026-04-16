@@ -24,8 +24,7 @@ const Logo = ({ size = 'default' }) => {
       style={{ 
         height: finalHeight, 
         objectFit: 'contain',
-        borderRadius: '6px',
-        pointerEvents: 'none'
+        borderRadius: '6px'
       }} 
     />
   );

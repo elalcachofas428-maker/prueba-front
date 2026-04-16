@@ -130,6 +130,27 @@ export default function DeviceOnboardingPage() {
         justifyContent: 'center',
         padding: '24px',
       }}>
+        {/* --- Logo clickable to Landing --- */}
+        <div style={{
+          position: 'absolute',
+          top: '32px',
+          left: '42px',
+          zIndex: 100
+        }}>
+          <button
+            onClick={() => navigate('/landing')}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 0,
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            <Logo size="large" />
+          </button>
+        </div>
         <AnimatePresence mode="wait">
           {/* ═══════════ STEP 1: Device Selection ═══════════ */}
           {showContent && step === 'select' && (

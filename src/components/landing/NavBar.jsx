@@ -5,7 +5,7 @@ import Logo from '../Logo'
 
 
 const NAV_LINKS = [
-  { id: 'inicio',        label: 'Inicio',        icon: Home,       gradientFrom: '#a955ff', gradientTo: '#ea51ff' },
+  { id: 'home',          label: 'Home',          icon: Home,       gradientFrom: '#a955ff', gradientTo: '#ea51ff' },
   { id: 'funciones',     label: 'Funciones',     icon: Zap,        gradientFrom: '#00D4FF', gradientTo: '#7C3AED' },
   { id: 'como-funciona', label: 'Cómo funciona', icon: Settings,   gradientFrom: '#56CCF2', gradientTo: '#2F80ED' },
   { id: 'formatos',      label: 'Formatos',      icon: Layers,     gradientFrom: '#80FF72', gradientTo: '#7EE8FA' },
@@ -14,6 +14,20 @@ const NAV_LINKS = [
 
 export default function NavBar({ user, onLogout, activeSection, onNavigate }) {
   const [menuOpen, setMenuOpen] = React.useState(false)
+  
+  // Custom hook for landscape responsiveness + localStorage flag
+  const [isMobileMode, setIsMobileMode] = React.useState(false);
+  React.useEffect(() => {
+    const mq = window.matchMedia('(max-height: 500px) and (orientation: landscape)');
+    const updateMode = () => {
+      const isShort = mq.matches;
+      const selectedDevice = localStorage.getItem('leadbook_device');
+      setIsMobileMode(isShort || selectedDevice === 'mobile');
+    };
+    updateMode();
+    mq.addEventListener('change', updateMode);
+    return () => mq.removeEventListener('change', updateMode);
+  }, []);
 
   const handleNav = (id) => {
     onNavigate(id)
@@ -21,13 +35,19 @@ export default function NavBar({ user, onLogout, activeSection, onNavigate }) {
   }
 
   return (
-    <header style={{ position: 'absolute', top: '20px', left: 0, right: 0, zIndex: 50, padding: '0 20px' }}>
+    <header style={{ 
+      position: 'absolute', 
+      top: isMobileMode ? '10px' : '20px', 
+      left: 0, right: 0, 
+      zIndex: 50, 
+      padding: isMobileMode ? '0 10px' : '0 20px' 
+    }}>
       {/* CSS — ultra-smooth GPU-composited hover animations */}
       <style>{`
         .gradient-pill {
           position: relative;
-          width: 50px;
-          height: 50px;
+          width: ${isMobileMode ? '40px' : '50px'};
+          height: ${isMobileMode ? '40px' : '50px'};
           border-radius: 9999px;
           display: flex;
           align-items: center;
@@ -148,11 +168,12 @@ export default function NavBar({ user, onLogout, activeSection, onNavigate }) {
 
         {/* --- 1. Logo --- */}
         <button
-          onClick={() => handleNav('inicio')}
+          onClick={() => handleNav('home')}
           style={{
             display: 'flex', alignItems: 'center',
             background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-            marginLeft: '60px',
+            marginLeft: isMobileMode ? '30px' : '60px',
+            transform: isMobileMode ? 'scale(0.8)' : 'none',
           }}
         >
           <Logo size="huge" />
@@ -207,11 +228,13 @@ export default function NavBar({ user, onLogout, activeSection, onNavigate }) {
         {/* --- 3. Auth Buttons --- */}
         <div className="nav-desktop-auth" style={{
           display: 'flex', alignItems: 'center', gap: '12px',
-          padding: '6px 8px',
+          padding: isMobileMode ? '4px 6px' : '6px 8px',
           borderRadius: '9999px',
           background: 'rgba(255,255,255,0.04)',
           backdropFilter: 'blur(12px)',
           border: '1px solid rgba(255,255,255,0.06)',
+          transform: isMobileMode ? 'scale(0.9)' : 'none',
+          transformOrigin: 'right center'
         }}>
           {user ? (
             <>

@@ -51,6 +51,22 @@ html, body {
   height: 100%;
 }
 
+/* ── Mobile Landscape Overrides (Short viewports) ── */
+@media (max-height: 500px) and (orientation: landscape) {
+  :root {
+    --header-height: 60px;
+  }
+  
+  .card-content {
+    padding-top: 0px !important;
+  }
+
+  /* Reduce overall font scaling for short heights */
+  html {
+    font-size: 14px;
+  }
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: auto; }
 body {
