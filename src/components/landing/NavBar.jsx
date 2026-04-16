@@ -168,8 +168,8 @@ export default function NavBar({ user, onLogout, activeSection, onNavigate }) {
           style={{
             display: 'flex', alignItems: 'center',
             background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-            marginLeft: isMobileMode ? '30px' : '60px',
-            transform: isMobileMode ? 'scale(0.8)' : 'none',
+            marginLeft: isLandscapeShort ? '30px' : '60px',
+            transform: isLandscapeShort ? 'scale(0.8)' : 'none',
           }}
         >
           <Logo size="huge" />
@@ -224,12 +224,12 @@ export default function NavBar({ user, onLogout, activeSection, onNavigate }) {
         {/* --- 3. Auth Buttons --- */}
         <div className="nav-desktop-auth" style={{
           display: 'flex', alignItems: 'center', gap: '12px',
-          padding: isMobileMode ? '4px 6px' : '6px 8px',
+          padding: isLandscapeShort ? '4px 6px' : '6px 8px',
           borderRadius: '9999px',
           background: 'rgba(255,255,255,0.04)',
           backdropFilter: 'blur(12px)',
           border: '1px solid rgba(255,255,255,0.06)',
-          transform: isMobileMode ? 'scale(0.9)' : 'none',
+          transform: isLandscapeShort ? 'scale(0.9)' : 'none',
           transformOrigin: 'right center'
         }}>
           {user ? (
